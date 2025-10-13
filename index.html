@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Pastoral - Distrito Fresnillo Centro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* ==================== */
+        /* BASE & RESET */
+        /* ==================== */
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --light-bg: #f8f9fa;
+            --dark-text: #212529;
+            --border-color: #dee2e6;
+            --accent-light: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* ==================== */
+        /* BOTONES DE ENCABEZADO Y VISTA (SOLO ICONO + TOOLTIP) */
+        /* ==================== */
+        button, .btn {
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        button:active, .btn:active { transform: scale(0.98); }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-secondary { background-color: var(--secondary-color); color: white; }
+        .btn-warning { background-color: var(--warning-color); color: var(--dark-text); }
+
+        /* Estilo para botones que solo contienen iconos */
+        .icon-only-btn {
+            padding: 10px;
+            gap: 0;
+            justify-content: center;
+        }
+        .icon-only-btn span {
+            display: none;
+        }
+        .icon-only-btn i {
+            margin: 0;
+        }
+
+        .header-buttons, .view-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .view-selector {
+            justify-content: center;
+        }
+
+        /* ==================== */
+        /* LAYOUT (GRID) */
+        /* ==================== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        /* Desktop/Tablet: Distribución de 3/5 y 2/5 */
+        @media (min-width: 992px) {
+            .main-grid {
+                grid-template-columns: 3fr 2fr;
+            }
+        }
+
+        /* ==================== */
+        /* MODALES (POPUPS) */
+        /* ==================== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px; /* Mayor ancho para configuración */
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--secondary-color);
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: var(--danger-color); }
+
+        .form-group-flex {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group-flex > div { flex: 1; }
+
+        /* Estilo de Inputs/Selects en Modales */
+        .modal-content input:not([type="color"]):not([type="checkbox"]),
+        .modal-content select,
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+
+        /* ==================== */
+        /* CALENDARIO ESTÉTICO Y RESPONSIVO */
+        /* (Mantenido del código anterior) */
+        /* ==================== */
+        #calendar-container {
+             width: 100%;
+        }
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .calendar-nav button {
+            padding: 8px 12px;
+            font-size: 1.2em;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .day-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .day-cell {
+            min-height: 120px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-width: 0 1px 1px 0;
+            position: relative;
+            background-color: #fff;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .day-cell:hover {
+            background-color: var(--accent-light);
+        }
+        .day-number {
+            font-weight: bold;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 5px;
+            text-align: right;
+        }
+        .today {
+            background-color: #ffeaa7 !important;
+            border: 2px solid var(--warning-color);
+            border-width: 2px !important;
+        }
+        .prev-month, .next-month {
+            background-color: #e9ecef;
+            color: #aaa;
+        }
+
+        /* Eventos en Calendario (Recuadros redondeados - MODO PC/Tablet) */
+        .event-bar {
+            height: 16px;
+            border-radius: 6px;
+            font-size: 0.7em;
+            color: white;
+            font-weight: 500;
+            padding: 1px 5px;
+            margin-bottom: 3px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            z-index: 10;
+            width: calc(100% - 10px);
+            box-sizing: border-box;
+            line-height: 16px;
+        }
+
+        /* Versión Miniatura para Móvil (iPhone/Android) */
+        @media (max-width: 767px) {
+            .day-cell {
+                min-height: unset;
+                aspect-ratio: 1 / 1;
+                padding: 3px;
+                font-size: 0.8em;
+            }
+            .day-number {
+                font-size: 0.9em;
+                margin-bottom: 1px;
+            }
+            .event-bar {
+                display: none;
+            }
+            .event-mini-dots {
+                display: flex;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                margin-top: 2px;
+            }
+            .event-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                margin: 1px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            }
+        }
+
+        /* ==================== */
+        /* LISTA DE ACTIVIDADES */
+        /* (Mantenido del código anterior) */
+        /* ==================== */
+        #list-container {
+            width: 100%;
+        }
+        #search-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .activity-item {
+            background-color: white;
+            margin-bottom: 12px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        /* ==================== */
+        /* CUENTA REGRESIVA & TAGS */
+        /* (Mantenido del código anterior) */
+        /* ==================== */
+        .countdown-time {
+            font-size: 0.9em;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            min-width: 100px;
+            white-space: nowrap;
+        }
+        .cd-danger { background-color: var(--danger-color); }
+        .cd-warning { background-color: var(--warning-color); color: var(--dark-text);}
+        .cd-success { background-color: var(--success-color); }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            margin-right: 5px;
+            border-radius: 15px; /* Esquinas redondeadas */
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-top: 5px;
+            white-space: nowrap;
+        }
+
+        /* Colores de Departamentos base (Se sobreescriben por JS/LocalStorage) */
+        .dept-mn { background-color: black; color: white; font-weight: bold; }
+        .dept-mj { background-color: #00008B; color: white; font-weight: bold; }
+        .dept-mi { background-color: #FF69B4; color: white; font-weight: bold; }
+        .dept-ms { background-color: yellow; color: black; font-weight: bold; }
+        .dept-mp { background-color: green; color: white; font-weight: bold; }
+        .dept-mm { background-color: #654321; color: white; font-weight: bold; }
+        .dept-mvf { background-color: lightgray; color: black; font-weight: bold; }
+        .dept-predicacion { background-color: #FF4500; color: white; font-weight: bold; }
+        .dept-visitacion { background-color: #8A2BE2; color: white; font-weight: bold; }
+        .dept-otro { background-color: var(--secondary-color); color: white; font-weight: bold; }
+
+        /* Botón Flotante */
+        .float-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            color: white;
+            font-size: 2em;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+            transition: transform 0.3s;
+        }
+
+        /* ==================== */
+        /* CONFIGURACIÓN ESTÉTICA */
+        /* ==================== */
+
+        .config-section {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background-color: var(--accent-light);
+        }
+
+        /* Estética de las Iglesias */
+        .churches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .church-item-card {
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .church-item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .church-item-card input[type="text"] {
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            padding: 5px;
+            margin-top: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .church-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        .church-actions .icon-only-btn {
+            padding: 5px 8px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        .church-actions .icon-only-btn:hover {
+            background-color: var(--danger-color);
+        }
+
+        /* Estética de los Departamentos */
+        .departments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .department-item-row {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .department-item-row input[type="text"],
+        .department-item-row input[type="color"] {
+            margin-bottom: 0;
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        .department-item-row .tag {
+            flex-grow: 1;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header style="margin-bottom: 20px; border-bottom: 3px solid var(--primary-color); padding-bottom: 10px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <h1 id="district-title" style="margin: 0;"><i class="fas fa-church"></i> Agenda Pastoral</h1>
+            <div class="header-buttons">
+                <button class="btn-secondary icon-only-btn" onclick="openConfigModal()" title="Configuración (Presiona /)"><i class="fas fa-cog"></i><span>Configurar</span></button>
+                <button class="btn-secondary icon-only-btn" onclick="exportData()" title="Exportar JSON"><i class="fas fa-file-export"></i><span>Exportar JSON</span></button>
+                <label class="btn-secondary btn icon-only-btn" for="import-json" style="cursor: pointer;" title="Importar JSON"><i class="fas fa-file-import"></i><span>Importar JSON</span></label>
+                <input type="file" id="import-json" accept=".json" style="display: none;">
+                <button class="btn-warning icon-only-btn" onclick="openPDFModal()" title="Informe PDF"><i class="fas fa-file-pdf"></i><span>Informe PDF</span></button>
+            </div>
+        </header>
+
+        <div class="view-selector">
+            <button class="btn-primary icon-only-btn" onclick="changeView('calendar')" id="btn-calendar-view" title="Calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
+            <button class="btn-secondary icon-only-btn" onclick="changeView('list')" id="btn-list-view" title="Lista de Actividades (Presiona -)"><i class="fas fa-list"></i><span>Lista</span></button>
+        </div>
+
+        <div class="main-grid">
+            <div id="calendar-container" class="view-content">
+                <div class="calendar-nav">
+                    <button class="btn-secondary icon-only-btn" onclick="prevYear()" title="Año anterior (↑)"><i class="fas fa-angle-double-left"></i></button>
+                    <button class="btn-secondary icon-only-btn" onclick="prevMonth()" title="Mes anterior (←)"><i class="fas fa-chevron-left"></i></button>
+                    <h2 id="current-month-year" style="margin: 0;">Octubre 2025</h2>
+                    <button class="btn-secondary icon-only-btn" onclick="nextMonth()" title="Mes siguiente (→)"><i class="fas fa-chevron-right"></i></button>
+                    <button class="btn-secondary icon-only-btn" onclick="nextYear()" title="Año siguiente (↓)"><i class="fas fa-angle-double-right"></i></button>
+                </div>
+                <div class="calendar" id="calendar">
+                    </div>
+            </div>
+
+            <div id="list-container" class="view-content" style="display: none;">
+                <h3>Buscador y Actividades Pendientes <i class="fas fa-clock"></i></h3>
+                <input type="text" id="search-input" placeholder="Buscar actividades (ej. visita mision juvenil) (Presiona '-')" title="Búsqueda Súper Poderosa" autofocus>
+                <ul id="activity-list" style="list-style: none; padding: 0;">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <button class="float-btn" id="add-activity-btn" onclick="openActivityModal('create')" title="Agregar Actividad (Presiona '+')">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <div id="config-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('config-modal')">×</span>
+            <h2><i class="fas fa-cog"></i> Configuración General</h2>
+            <form id="config-form">
+                <div class="config-section">
+                    <label for="district-name" style="font-weight: bold;"><i class="fas fa-map-marked-alt"></i> Nombre del Distrito:</label>
+                    <input type="text" id="district-name" required>
+                </div>
+
+                <div class="config-section">
+                    <h4 style="margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;"><i class="fas fa-church"></i> Iglesias:</h4>
+                    <p style="font-size: 0.9em; margin-bottom: 15px; color: var(--secondary-color);">Renombra las iglesias. Los colores predefinidos se mantienen para el calendario.</p>
+                    <div id="churches-config-list" class="churches-grid">
+                        </div>
+                    <button type="button" class="btn-secondary" onclick="addChurchInput()" style="width: 100%; margin-top: 15px;"><i class="fas fa-plus"></i> Agregar Nueva Iglesia</button>
+                </div>
+
+                <div class="config-section">
+                    <h4 style="margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;"><i class="fas fa-layer-group"></i> Departamentos:</h4>
+                    <p style="font-size: 0.9em; margin-bottom: 15px; color: var(--secondary-color);">Define los nombres, colores de fondo y letras de los departamentos.</p>
+                    <div id="departments-config-list" class="departments-list">
+                        </div>
+                    <button type="button" class="btn-secondary" onclick="addDepartmentInput()" style="width: 100%; margin-top: 15px;"><i class="fas fa-plus"></i> Agregar Nuevo Departamento</button>
+                </div>
+
+
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="submit" class="btn-primary" style="flex: 1;"><i class="fas fa-save"></i> Guardar Configuración</button>
+                    <button type="button" class="btn-danger" onclick="formatDataConfirm()" style="flex: 1;"><i class="fas fa-eraser"></i> Formatear Todos los Datos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="activity-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('activity-modal')">×</span>
+            <h2 id="activity-modal-title"><i class="fas fa-calendar-plus"></i> Registrar Actividad</h2>
+            <form id="activity-form">
+                <input type="hidden" id="activity-id">
+
+                <label for="activity-title"><i class="fas fa-heading"></i> Título:</label>
+                <input type="text" id="activity-title" required placeholder="Ej: Culto Divino en Iglesia Central">
+
+                <div class="form-group-flex">
+                    <div>
+                        <label for="start-date"><i class="fas fa-calendar-day"></i> Inicio:</label>
+                        <input type="datetime-local" id="start-date" required>
+                    </div>
+                    <div>
+                        <label for="end-date"><i class="fas fa-calendar-check"></i> Fin (Opcional):</label>
+                        <input type="datetime-local" id="end-date">
+                    </div>
+                </div>
+
+                <label for="department"><i class="fas fa-layer-group"></i> Departamento/Tipo:</label>
+                <select id="department" required>
+                    </select>
+
+                <div id="additional-details-container">
+                    </div>
+
+                <div id="church-details">
+                    <label for="church-id"><i class="fas fa-church"></i> Iglesia (Opcional):</label>
+                    <select id="church-id">
+                        <option value="">-- Sin Iglesia Específica --</option>
+                    </select>
+                </div>
+
+                <label for="activity-details"><i class="fas fa-file-alt"></i> Detalles/Notas:</label>
+                <textarea id="activity-details" rows="3" placeholder="Información relevante."></textarea>
+
+                <label for="place-name"><i class="fas fa-map-pin"></i> Nombre del Lugar (Ej. "Casa de Hno. Juan"):</label>
+                <input type="text" id="place-name" placeholder="Nombre para mostrar en detalles.">
+
+                <label for="google-maps-url"><i class="fas fa-map-marker-alt"></i> Ubicación (Google Maps URL):</label>
+                <input type="url" id="google-maps-url" placeholder="Ej: https://maps.app.goo.gl/...">
+
+                <div style="margin-top: 20px; text-align: right;">
+                    <button type="submit" class="btn-primary" id="activity-submit-btn"><i class="fas fa-save"></i> Guardar Actividad (CRUD: CREATE/UPDATE)</button>
+                    <button type="button" class="btn-danger" id="activity-delete-btn" style="display: none; margin-left: 10px;" onclick="deleteActivityConfirm()"><i class="fas fa-trash-alt"></i> Eliminar (CRUD: DELETE)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('details-modal')">×</span>
+            <h2 id="details-title" style="border-bottom: 1px solid #eee; padding-bottom: 10px;"><i class="fas fa-info-circle"></i> Detalles</h2>
+            <div id="details-content">
+                <p><strong>Departamento/Tipo:</strong> <span id="details-dept" class="tag"></span></p>
+                <p><strong>Iglesia:</strong> <span id="details-church" class="tag"></span></p>
+                <div id="details-specific"></div> <p><strong><i class="fas fa-calendar-day"></i> Inicio:</strong> <span id="details-start"></span></p>
+                <p><strong><i class="fas fa-calendar-check"></i> Fin:</strong> <span id="details-end"></span></p>
+                <p style="margin-top: 15px;"><strong><i class="fas fa-file-alt"></i> Detalles:</strong> <br><span id="details-notes" style="display: block; padding: 10px; border-radius: 5px; background-color: var(--accent-light);"></span></p>
+
+                <div id="details-location" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; display: none;">
+                    <strong><i class="fas fa-map-pin"></i> Lugar:</strong> <span id="details-place-name" style="font-weight: bold; margin-left: 5px;"></span>
+                    <a id="details-map-link" target="_blank" class="btn-secondary icon-only-btn" style="margin-left: 10px; text-decoration: none; padding: 5px 10px;" title="Abrir en Google Maps"><i class="fas fa-external-link-alt"></i></a>
+
+                    <h4 style="margin-top: 15px; margin-bottom: 5px;">Vista Previa del Mapa:</h4>
+                    <iframe id="details-map-iframe" width="100%" height="250" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+            <div style="margin-top: 25px; text-align: right;">
+                <button class="btn-primary" onclick="editActivityFromDetails()"><i class="fas fa-edit"></i> Editar (CRUD: UPDATE)</button>
+                <button class="btn-danger" onclick="deleteActivityFromDetails()"><i class="fas fa-trash-alt"></i> Eliminar (CRUD: DELETE)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="daily-agenda-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-btn" onclick="closeModal('daily-agenda-modal')">×</span>
+            <h2 id="daily-agenda-date-title"><i class="fas fa-calendar-day"></i> Agenda para:</h2>
+            <ul id="daily-activity-list" style="list-style: none; padding: 0;">
+                </ul>
+        </div>
+    </div>
+
+    <div id="pdf-modal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <span class="close-btn" onclick="closeModal('pdf-modal')">×</span>
+            <h2><i class="fas fa-file-pdf"></i> Generar Informe PDF</h2>
+            <form id="pdf-form" onsubmit="event.preventDefault(); exportPDF()">
+                <label for="pdf-period"><i class="fas fa-clock"></i> Período del Informe:</label>
+                <select id="pdf-period" required>
+                    <option value="mes">Mensual</option>
+                    <option value="trimestre">Trimestral</option>
+                    <option value="anual">Anual</option>
+                </select>
+
+                <label for="pdf-year"><i class="fas fa-calendar-alt"></i> Año:</label>
+                <select id="pdf-year" required>
+                    </select>
+
+                <button type="submit" class="btn-warning" style="width: 100%; margin-top: 20px;"><i class="fas fa-print"></i> Exportar a PDF</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Utilidad para la búsqueda sin acentos ni orden (Súper Poderosa)
+        const normalizeAndTokenize = (text) => {
+            if (!text) return [];
+            return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/\s+/).filter(t => t.length > 0);
+        };
+
+        // Función para determinar si el color de la letra debe ser blanco o negro para contraste
+        const getContrastTextColor = (hexcolor) => {
+            if (!hexcolor || hexcolor.length < 7) return '#000000'; // Default black
+
+            let r = parseInt(hexcolor.slice(1, 3), 16),
+                g = parseInt(hexcolor.slice(3, 5), 16),
+                b = parseInt(hexcolor.slice(5, 7), 16);
+
+            // Perceived luminance formula (from W3C)
+            let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            return (luminance > 0.5) ? '#000000' : '#ffffff';
+        }
+
+        // ===================================
+        // 1. CONFIGURACIÓN INICIAL & DATOS BASE
+        // ===================================
+
+        let currentView = 'calendar';
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let activities = [];
+
+        // Colores base para iglesias (12 predefinidos)
+        const defaultChurchColors = [
+            { id: 'c1', name: "Iglesia 1", fondo: "#5be9f8", letra: "#000000" },
+            { id: 'c2', name: "Iglesia 2", fondo: "#FF0000", letra: "#ffffff" },
+            { id: 'c3', name: "Iglesia 3", fondo: "#00008B", letra: "#ffffff" },
+            { id: 'c4', name: "Iglesia 4", fondo: "#006847", letra: "#ffffff" },
+            { id: 'c5', name: "Iglesia 5", fondo: "#FFA500", letra: "#000000" },
+            { id: 'c6', name: "Iglesia 6", fondo: "#b33b72", letra: "#ffffff" },
+            { id: 'c7', name: "Iglesia 7", fondo: "#2adb83", letra: "#000000" },
+            { id: 'c8', name: "Iglesia 8", fondo: "#ff00cd", letra: "#ffffff" },
+            { id: 'c9', name: "Iglesia 9", fondo: "#09adff", letra: "#ffffff" },
+            { id: 'c10', name: "Iglesia 10", fondo: "#c2cc37", letra: "#000000" },
+            { id: 'c11', name: "Iglesia 11", fondo: "#fff176", letra: "#000000" },
+            { id: 'c12', name: "Iglesia 12", fondo: "#b25330", letra: "#ffffff" }
+        ];
+
+        // Departamentos base
+        const defaultDepartments = {
+            mn: { name: "Misión Noroccidental", fondo: "#000000", letra: "#ffffff", icon: "fas fa-mountain" },
+            mj: { name: "Ministerio Juvenil", fondo: "#00008B", letra: "#ffffff", icon: "fas fa-users-line" },
+            mi: { name: "Ministerio Infantil", fondo: "#FF69B4", letra: "#ffffff", icon: "fas fa-child-reaching" },
+            ms: { name: "Ministerio de Salud", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-stethoscope" },
+            mp: { name: "Ministerios Personales", fondo: "#008000", letra: "#ffffff", icon: "fas fa-hand-holding-heart" },
+            mm: { name: "Ministerio de Mayordomía", fondo: "#654321", letra: "#ffffff", icon: "fas fa-piggy-bank" },
+            mvf: { name: "Ministerio de Vida Familiar", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-heart-pulse" },
+            visitacion: { name: "Visitación Pastoral", fondo: "#8A2BE2", letra: "#ffffff", icon: "fas fa-house-chimney-user" },
+            predicacion: { name: "Predicación", fondo: "#FF4500", letra: "#ffffff", icon: "fas fa-book-bible" },
+            otro: { name: "Otro", fondo: "#6c757d", letra: "#ffffff", icon: "fas fa-circle-question" }
+        };
+
+        let config = {
+            districtName: "Fresnillo Centro",
+            churches: defaultChurchColors.map(c => ({...c})), // Copia los valores por defecto
+            departments: {...defaultDepartments} // Copia los valores por defecto
+        };
+
+        // ===================================
+        // 2. UTILIDADES Y ALMACENAMIENTO (CRUD)
+        // ===================================
+
+        const saveActivities = () => localStorage.setItem('agendaActivities', JSON.stringify(activities));
+        const loadActivities = () => {
+            const stored = localStorage.getItem('agendaActivities');
+            activities = stored ? JSON.parse(stored) : [];
+            activities.forEach(a => {
+                a.start = new Date(a.start);
+                if (a.end) a.end = new Date(a.end);
+            });
+            activities.sort((a, b) => a.start - b.start);
+        };
+
+        const saveConfig = () => localStorage.setItem('agendaConfig', JSON.stringify(config));
+        const loadConfig = () => {
+            const stored = localStorage.getItem('agendaConfig');
+            if (stored) {
+                const loadedConfig = JSON.parse(stored);
+                config.districtName = loadedConfig.districtName || config.districtName;
+                config.churches = loadedConfig.churches || config.churches;
+                config.departments = loadedConfig.departments || config.departments;
+
+                if (loadedConfig.currentYear) {
+                    currentYear = loadedConfig.currentYear;
+                }
+            }
+            document.getElementById('district-title').textContent = `Agenda Pastoral - Distrito ${config.districtName}`;
+        };
+
+        const getDepartmentDetails = (deptId) => config.departments[deptId] || config.departments.otro;
+
+        const getEventStyle = (activity) => {
+            let dept = getDepartmentDetails(activity.department);
+            let fondo, letra, name;
+
+            const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : null;
+
+            // Si es predicación y tiene iglesia, usa los colores de la iglesia.
+            if (activity.department === 'predicacion' && church) {
+                return { fondo: church.fondo, letra: church.letra, name: `${church.name} (Predicación)` };
+            }
+
+            // Para otros departamentos, usamos los colores del departamento configurado.
+            return { fondo: dept.fondo, letra: dept.letra, name: dept.name };
+        }
+
+        const rgbToHex = (rgb) => {
+            // Convierte "rgb(r, g, b)" a "#RRGGBB"
+            const parts = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+            if (!parts) return rgb;
+
+            delete parts[0];
+            for (let i = 1; i <= 3; i++) {
+                parts[i] = parseInt(parts[i]).toString(16).padStart(2, '0');
+            }
+            return "#" + parts.join('');
+        };
+
+
+        // ===================================
+        // 3. VISTAS Y NAVEGACIÓN
+        // ===================================
+
+        // Determina si el dispositivo es móvil (usado para la lógica de visualización del calendario)
+        const isMobile = () => window.innerWidth <= 767;
+
+        const changeView = (view) => {
+            currentView = view;
+            document.querySelectorAll('.view-content').forEach(el => el.style.display = 'none');
+            document.getElementById(`${view}-container`).style.display = 'block';
+
+            document.getElementById('btn-calendar-view').className = (view === 'calendar') ? 'btn-primary icon-only-btn' : 'btn-secondary icon-only-btn';
+            document.getElementById('btn-list-view').className = (view === 'list') ? 'btn-primary icon-only-btn' : 'btn-secondary icon-only-btn';
+
+            if (view === 'calendar') renderCalendar();
+            if (view === 'list') renderActivityList();
+            
+            // Renderizar opciones de departamentos en el modal de actividad
+            if (view === 'calendar' || view === 'list') renderDepartmentOptions();
+        };
+
+        const renderDepartmentOptions = () => {
+            const deptSelect = document.getElementById('department');
+            if (!deptSelect) return;
+            
+            deptSelect.innerHTML = '';
+            
+            for (const id in config.departments) {
+                const dept = config.departments[id];
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = dept.name;
+                option.style.backgroundColor = dept.fondo;
+                option.style.color = dept.letra;
+                option.style.fontWeight = 'bold';
+                deptSelect.appendChild(option);
+            }
+        };
+
+        // ===================================
+        // 4. LÓGICA DEL CALENDARIO
+        // ===================================
+
+        const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+        const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
+
+        const renderCalendar = () => {
+            const today = new Date();
+            const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+            const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+            const calendarEl = document.getElementById('calendar');
+            const monthYearEl = document.getElementById('current-month-year');
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+            monthYearEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            calendarEl.innerHTML = '';
+
+            const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+            dayNames.forEach(day => {
+                calendarEl.innerHTML += `<div class="day-header">${day}</div>`;
+            });
+
+            // Días del mes anterior (relleno)
+            const prevMonthDays = getDaysInMonth(currentMonth - 1, currentYear);
+            for (let i = 0; i < firstDay; i++) {
+                calendarEl.innerHTML += `<div class="day-cell prev-month"><span>${prevMonthDays - firstDay + i + 1}</span></div>`;
+            }
+
+            // Días del mes actual
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDate = new Date(currentYear, currentMonth, day);
+                const isToday = dayDate.toDateString() === today.toDateString();
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const cellClass = isToday ? 'day-cell today' : 'day-cell';
+                calendarEl.innerHTML += `<div class="${cellClass}" data-date="${dateStr}" id="day-cell-${day}" onclick="handleCalendarDayClick('${dateStr}')">
+                                            <span class="day-number">${day}</span>
+                                        </div>`;
+            }
+
+            // Días del mes siguiente (relleno)
+            let dayIndex = firstDay + daysInMonth;
+            let nextDay = 1;
+            while (dayIndex % 7 !== 0) {
+                calendarEl.innerHTML += `<div class="day-cell next-month"><span>${nextDay++}</span></div>`;
+                dayIndex++;
+            }
+
+            placeEventsOnCalendar(daysInMonth);
+        };
+
+        const handleCalendarDayClick = (dateStr) => {
+            if (isMobile()) {
+                // Modo Móvil/Tablet: Abrir agenda diaria
+                openDailyAgendaModal(dateStr);
+            } else {
+                // Modo Desktop: Abrir modal de registro pre-llenado
+                const [year, month, day] = dateStr.split('-');
+                const now = new Date();
+                const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                const dateTimeStr = `${year}-${month}-${day}T${timeStr}`;
+
+                openActivityModal('create');
+                document.getElementById('start-date').value = dateTimeStr;
+            }
+        };
+
+        const prevMonth = () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            config.currentYear = currentYear;
+            saveConfig();
+            renderCalendar();
+        };
+
+        const nextMonth = () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            config.currentYear = currentYear;
+            saveConfig();
+            renderCalendar();
+        };
+
+        const prevYear = () => {
+            currentYear--;
+            config.currentYear = currentYear;
+            saveConfig();
+            renderCalendar();
+        };
+
+        const nextYear = () => {
+            currentYear++;
+            config.currentYear = currentYear;
+            saveConfig();
+            renderCalendar();
+        };
+
+        const placeEventsOnCalendar = (daysInMonth) => {
+            const startOfMonth = new Date(currentYear, currentMonth, 1);
+            const endOfMonth = new Date(currentYear, currentMonth, daysInMonth, 23, 59, 59);
+
+            const filteredActivities = activities.filter(activity => {
+                const eventEnd = activity.end || activity.start;
+                // Filtrar actividades que se superponen con el mes actual
+                return activity.start <= endOfMonth && eventEnd >= startOfMonth;
+            });
+
+            filteredActivities.forEach(activity => {
+                const eventStart = activity.start;
+                const eventEnd = activity.end || activity.start;
+                const style = getEventStyle(activity);
+
+                // Determinar el rango de días en el mes actual que el evento ocupa
+                let startDay = Math.max(1, eventStart.getDate());
+                if (eventStart.getMonth() !== currentMonth || eventStart.getFullYear() !== currentYear) {
+                    startDay = 1;
+                }
+
+                let endDay = Math.min(daysInMonth, eventEnd.getDate());
+                if (eventEnd.getMonth() !== currentMonth || eventEnd.getFullYear() !== currentYear) {
+                    endDay = daysInMonth;
+                }
+
+                // Si el evento no está en el mes (a pesar del filtro anterior, una doble verificación)
+                if (eventEnd < startOfMonth || eventStart > endOfMonth) return;
+
+                for (let d = startDay; d <= endDay; d++) {
+                    const cell = document.getElementById(`day-cell-${d}`);
+
+                    if (cell) {
+                        if (isMobile()) {
+                            // MODO MÓVIL: Pequeños círculos de colores
+                            let dotsContainer = cell.querySelector('.event-mini-dots');
+                            if (!dotsContainer) {
+                                dotsContainer = document.createElement('div');
+                                dotsContainer.className = 'event-mini-dots';
+                                cell.appendChild(dotsContainer);
+                            }
+                            const dot = document.createElement('div');
+                            dot.className = 'event-dot';
+                            dot.style.backgroundColor = style.fondo;
+                            dot.title = activity.title;
+                            dotsContainer.appendChild(dot);
+
+                        } else {
+                            // MODO ESCRITORIO/TABLET: Barras de evento
+                            const bar = document.createElement('div');
+                            bar.className = 'event-bar';
+                            bar.style.backgroundColor = style.fondo;
+                            bar.style.color = style.letra;
+                            bar.textContent = d === startDay ? activity.title : ''; // Nombre solo al inicio de la barra
+                            bar.title = `${activity.title} (${style.name})`;
+                            bar.setAttribute('onclick', `event.stopPropagation(); openDetailsModal('${activity.id}')`);
+                            cell.appendChild(bar);
+                        }
+                    }
+                }
+            });
+        };
+
+        // ===================================
+        // 5. MODALES Y CRUD (Activity)
+        // ===================================
+
+        const closeModal = (id) => {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'none';
+        };
+
+        const openActivityModal = (mode, id = null) => {
+            const modal = document.getElementById('activity-modal');
+            const form = document.getElementById('activity-form');
+            form.reset();
+            document.getElementById('activity-id').value = '';
+            document.getElementById('activity-delete-btn').style.display = 'none';
+            document.getElementById('additional-details-container').innerHTML = '';
+
+            // Rellenar select de iglesias
+            const churchSelect = document.getElementById('church-id');
+            churchSelect.innerHTML = '<option value="">-- Sin Iglesia Específica --</option>';
+            config.churches.forEach(c => {
+                churchSelect.innerHTML += `<option value="${c.id}" style="background-color:${c.fondo}; color:${c.letra}; font-weight:bold;">${c.name}</option>`;
+            });
+            
+            // Rellenar select de departamentos
+            renderDepartmentOptions();
+
+
+            if (mode === 'edit' && id) {
+                const activity = activities.find(a => a.id === id);
+                if (activity) {
+                    document.getElementById('activity-id').value = id;
+                    document.getElementById('activity-modal-title').innerHTML = '<i class="fas fa-edit"></i> Editar Actividad (CRUD: UPDATE)';
+                    document.getElementById('activity-submit-btn').innerHTML = '<i class="fas fa-sync-alt"></i> Actualizar Actividad';
+                    document.getElementById('activity-delete-btn').style.display = 'inline-block';
+
+                    document.getElementById('activity-title').value = activity.title;
+                    document.getElementById('start-date').value = activity.start.toISOString().substring(0, 16);
+                    document.getElementById('end-date').value = activity.end ? activity.end.toISOString().substring(0, 16) : '';
+                    document.getElementById('department').value = activity.department;
+                    document.getElementById('activity-details').value = activity.details || '';
+                    document.getElementById('place-name').value = activity.placeName || '';
+                    document.getElementById('google-maps-url').value = activity.mapsUrl || '';
+                    document.getElementById('church-id').value = activity.churchId || '';
+
+                    renderAdditionalDetails(activity.department, activity);
+                }
+            } else {
+                document.getElementById('activity-modal-title').innerHTML = '<i class="fas fa-calendar-plus"></i> Registrar Actividad (CRUD: CREATE)';
+                document.getElementById('activity-submit-btn').innerHTML = '<i class="fas fa-save"></i> Guardar Actividad';
+            }
+            modal.style.display = 'flex';
+        };
+
+        const renderAdditionalDetails = (departmentValue, activity = {}) => {
+            const container = document.getElementById('additional-details-container');
+            container.innerHTML = '';
+
+            if (departmentValue === 'predicacion') {
+                container.innerHTML = `
+                    <div id="preaching-details" style="margin-bottom: 15px; border: 1px dashed #ccc; padding: 15px; border-radius: 8px; background-color: var(--accent-light);">
+                        <label for="preaching-type"><i class="fas fa-microphone-alt"></i> Tipo de Predicación:</label>
+                        <select id="preaching-type">
+                            <option value="semana">Entre Semana</option>
+                            <option value="sab-es">Sábado Escuela Sabática</option>
+                            <option value="sab-cd">Sábado Culto Divino</option>
+                            <option value="sab-sj">Sábado Sociedad de Jóvenes</option>
+                            <option value="evangelismo">Semana de Evangelismo (7+ días)</option>
+                            <option value="media-semana">Media Semana (3-4 días)</option>
+                        </select>
+                    </div>
+                `;
+                if (activity.preachingType) document.getElementById('preaching-type').value = activity.preachingType;
+            } else if (departmentValue === 'visitacion') {
+                 container.innerHTML = `
+                    <div id="visitacion-details" style="margin-bottom: 15px; border: 1px dashed #ccc; padding: 15px; border-radius: 8px; background-color: var(--accent-light);">
+                        <label for="brother-name"><i class="fas fa-user"></i> Nombre del Hermano/Hogar:</label>
+                        <input type="text" id="brother-name" placeholder="Ej: Hno. Juan Pérez o Familia Rodríguez">
+                    </div>
+                `;
+                if (activity.brotherName) document.getElementById('brother-name').value = activity.brotherName;
+            }
+        }
+
+        document.getElementById('department').addEventListener('change', (e) => {
+            renderAdditionalDetails(e.target.value);
+        });
+
+        document.getElementById('activity-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('activity-id').value;
+
+            const title = document.getElementById('activity-title').value;
+            const startStr = document.getElementById('start-date').value;
+            const endStr = document.getElementById('end-date').value;
+            const department = document.getElementById('department').value;
+            const details = document.getElementById('activity-details').value;
+            const placeName = document.getElementById('place-name').value;
+            const mapsUrl = document.getElementById('google-maps-url').value;
+            const churchId = document.getElementById('church-id').value;
+
+            const startDate = new Date(startStr);
+            const endDate = endStr ? new Date(endStr) : null;
+            if (endDate && endDate < startDate) {
+                alert("Error: La fecha de fin no puede ser anterior a la fecha de inicio.");
+                return;
+            }
+
+            // Datos específicos
+            const preachingType = department === 'predicacion' ? document.getElementById('preaching-type')?.value : null;
+            const brotherName = department === 'visitacion' ? document.getElementById('brother-name')?.value : null;
+
+
+            const newActivity = {
+                id: id || Date.now().toString(),
+                title,
+                start: startDate,
+                end: endDate,
+                department,
+                details,
+                placeName,
+                mapsUrl,
+                churchId,
+                preachingType,
+                brotherName
+            };
+
+            if (id) {
+                const index = activities.findIndex(a => a.id === id);
+                if (index > -1) activities[index] = newActivity; // CRUD: UPDATE
+            } else {
+                activities.push(newActivity); // CRUD: CREATE
+            }
+
+            activities.sort((a, b) => a.start - b.start);
+            saveActivities();
+            closeModal('activity-modal');
+            renderCalendar();
+            renderActivityList();
+        });
+
+        const deleteActivityConfirm = () => {
+            if (confirm('¿Estás seguro de que quieres eliminar esta actividad? (CRUD: DELETE).')) {
+                const id = document.getElementById('activity-id').value;
+                activities = activities.filter(a => a.id !== id);
+                saveActivities();
+                closeModal('activity-modal');
+                renderCalendar();
+                renderActivityList();
+            }
+        };
+
+        const deleteActivityFromDetails = () => {
+            const id = document.getElementById('details-modal').dataset.activityId;
+            const activity = activities.find(a => a.id === id);
+            if(activity && confirm(`¿Seguro que desea eliminar la actividad: "${activity.title}"? (CRUD: DELETE)`)){
+                activities = activities.filter(a => a.id !== id);
+                saveActivities();
+                closeModal('details-modal');
+                renderCalendar();
+                renderActivityList();
+            }
+        }
+
+        const editActivityFromDetails = () => {
+             const id = document.getElementById('details-modal').dataset.activityId;
+             closeModal('details-modal');
+             openActivityModal('edit', id);
+        }
+
+        // ===================================
+        // 6. DETALLES DE ACTIVIDAD (CRUD: READ)
+        // ===================================
+
+        const getEmbedMapUrl = (mapsUrl) => {
+            // Lógica para obtener el embed map URL (Mantenida del código anterior)
+            if (!mapsUrl) return null;
+            let url = mapsUrl;
+            if (url.includes('https://maps.app.goo.gl//search') && url.includes('@')) {
+                const parts = url.split('@');
+                if (parts.length > 1) {
+                    const coordsZoom = parts[1].split('/data=')[0];
+                    return `http://maps.google.com/?q=$?q=${coordsZoom.split(',')[0]},${coordsZoom.split(',')[1]}&z=15&output=embed`;
+                }
+            } else if (url.includes('https://maps.app.goo.gl//search')) {
+                const query = url.split('search/')[1];
+                return `http://maps.google.com/?q=${query}&z=15&output=embed`;
+            } else if (url.includes('maps.app.goo.gl/embed')) {
+                return url;
+            }
+            return null;
+        }
+
+        const openDetailsModal = (id) => {
+            const activity = activities.find(a => a.id === id);
+            if (!activity) return;
+
+            const modal = document.getElementById('details-modal');
+            modal.dataset.activityId = id;
+
+            document.getElementById('details-title').textContent = activity.title;
+
+            const deptDetails = getDepartmentDetails(activity.department);
+            document.getElementById('details-dept').textContent = deptDetails.name;
+            document.getElementById('details-dept').style.backgroundColor = deptDetails.fondo;
+            document.getElementById('details-dept').style.color = deptDetails.letra;
+
+            const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : null;
+            document.getElementById('details-church').textContent = church ? church.name : 'N/A';
+            document.getElementById('details-church').style.backgroundColor = church ? church.fondo : 'var(--secondary-color)';
+            document.getElementById('details-church').style.color = church ? church.letra : 'white';
+
+            const format = (date) => date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('details-start').textContent = format(activity.start);
+            document.getElementById('details-end').textContent = activity.end ? format(activity.end) : 'Mismo día/hora';
+            document.getElementById('details-notes').textContent = activity.details || 'Sin detalles.';
+
+            const locationDiv = document.getElementById('details-location');
+            const mapLink = document.getElementById('details-map-link');
+            const mapIframe = document.getElementById('details-map-iframe');
+
+            document.getElementById('details-place-name').textContent = activity.placeName || 'Ubicación sin nombre';
+
+            if (activity.mapsUrl) {
+                locationDiv.style.display = 'block';
+                mapLink.href = activity.mapsUrl;
+
+                const embedUrl = getEmbedMapUrl(activity.mapsUrl);
+                if (embedUrl) {
+                    mapIframe.src = embedUrl;
+                    mapIframe.style.display = 'block';
+                } else {
+                    mapIframe.src = '';
+                    mapIframe.style.display = 'none';
+                    mapLink.title = 'Abrir URL en Maps';
+                }
+
+            } else {
+                locationDiv.style.display = 'none';
+                mapIframe.src = '';
+            }
+
+            // Detalles específicos de predicación/visitación
+            const specificDiv = document.getElementById('details-specific');
+            specificDiv.innerHTML = '';
+            if (activity.department === 'predicacion' && activity.preachingType) {
+                 const typeName = {
+                    'semana': 'Entre Semana', 'sab-es': 'Sábado E. Sabática',
+                    'sab-cd': 'Sábado Culto Divino', 'sab-sj': 'Sábado Soc. Jóvenes',
+                    'evangelismo': 'Semana de Evangelismo',
+                    'media-semana': 'Media Semana (3-4 días)'
+                 }[activity.preachingType] || 'Desconocido';
+                specificDiv.innerHTML = `<p><strong><i class="fas fa-hand-point-right"></i> Tipo de Predicación:</strong> <span class="tag" style="background-color: ${deptDetails.fondo}; color: ${deptDetails.letra};">${typeName}</span></p>`;
+            } else if (activity.department === 'visitacion' && activity.brotherName) {
+                 specificDiv.innerHTML = `<p><strong><i class="fas fa-user-tag"></i> Hermano/Hogar:</strong> <span class="tag" style="background-color: ${deptDetails.fondo}; color: ${deptDetails.letra};">${activity.brotherName}</span></p>`;
+            }
+
+
+            modal.style.display = 'flex';
+        };
+
+        // ===================================
+        // 7. MODAL: AGENDA DIARIA (Móvil)
+        // ===================================
+
+        const openDailyAgendaModal = (dateStr) => {
+            // Lógica de agenda diaria (Mantenida del código anterior)
+            const targetDate = new Date(dateStr);
+            targetDate.setHours(12, 0, 0, 0);
+
+            const activitiesForDay = activities.filter(a => {
+                const aStart = new Date(a.start.getFullYear(), a.start.getMonth(), a.start.getDate());
+                const aEnd = a.end ? new Date(a.end.getFullYear(), a.end.getMonth(), a.end.getDate()) : aStart;
+
+                return targetDate.getTime() >= aStart.getTime() && targetDate.getTime() <= aEnd.getTime();
+            });
+
+            activitiesForDay.sort((a, b) => a.start - b.start);
+
+            const listEl = document.getElementById('daily-activity-list');
+            listEl.innerHTML = '';
+
+            document.getElementById('daily-agenda-date-title').textContent = `Agenda para: ${targetDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`;
+
+            if (activitiesForDay.length === 0) {
+                listEl.innerHTML = '<li style="text-align: center; color: var(--secondary-color);">No hay actividades programadas para este día. <i class="fas fa-face-smile"></i></li>';
+            } else {
+                activitiesForDay.forEach(activity => {
+                    const style = getEventStyle(activity);
+                    const dept = getDepartmentDetails(activity.department);
+                    const listItem = document.createElement('li');
+                    listItem.className = 'activity-item';
+                    listItem.style.borderLeftColor = style.fondo;
+
+                    listItem.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
+                                <p style="margin: 3px 0; font-size: 0.8em;">
+                                    <span><i class="fas fa-clock"></i> ${activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                                    ${activity.end ? ` - ${activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}` : ''}
+                                </p>
+                                <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
+                            </div>
+                            <button class="btn-primary icon-only-btn" style="padding: 5px 10px;" onclick="closeModal('daily-agenda-modal'); openDetailsModal('${activity.id}')" title="Ver Detalles"><i class="fas fa-info"></i></button>
+                        </div>
+                    `;
+                    listEl.appendChild(listItem);
+                });
+            }
+
+            document.getElementById('daily-agenda-modal').style.display = 'flex';
+        }
+
+        // ===================================
+        // 8. LISTA DE ACTIVIDADES & BÚSQUEDA
+        // ===================================
+
+        const renderActivityList = () => {
+            const listEl = document.getElementById('activity-list');
+            const searchValue = normalizeAndTokenize(document.getElementById('search-input').value);
+            const now = new Date();
+            listEl.innerHTML = '';
+
+            activities.forEach(activity => {
+                const eventEnd = activity.end || activity.start;
+
+                // 1. Ocultar de la lista si el evento ya pasó
+                if (eventEnd < now) return;
+
+                // 2. Lógica de Búsqueda "Súper Poderosa" (Ignora acentos y orden)
+                const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : { name: "" };
+                const dept = getDepartmentDetails(activity.department);
+
+                const searchString = `${activity.title} ${activity.details} ${dept.name} ${church.name} ${activity.preachingType || ''} ${activity.brotherName || ''} ${activity.placeName || ''}`;
+                const normalizedSearch = normalizeAndTokenize(searchString);
+
+                // Comprueba que CADA token de búsqueda esté presente en ALGÚN token normalizado del evento
+                const matches = searchValue.every(token => normalizedSearch.some(normalizedToken => normalizedToken.includes(token)));
+
+                if (searchValue.length > 0 && !matches) return;
+
+                // 3. Crear el elemento de la lista
+                const listItem = document.createElement('li');
+                listItem.className = 'activity-item';
+                const style = getEventStyle(activity);
+                listItem.style.borderLeftColor = style.fondo;
+
+                // 4. Cuenta Regresiva
+                const countdown = getCountdown(activity.start);
+                const countdownClass = countdown.class;
+
+                let countdownHTML = `<span class="countdown-time ${countdownClass}" title="Faltan ${countdown.formattedTime}">${countdown.shortTime}</span>`;
+
+                // 5. Contenido del Item
+                listItem.innerHTML = `
+                    <div class="activity-item-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                        <div style="flex-grow: 1;">
+                            <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
+                            <p style="margin: 3px 0; font-size: 0.85em;">
+                                <span style="margin-right: 10px;"><i class="fas fa-calendar-alt"></i> ${activity.start.toLocaleDateString('es-ES')}</span>
+                                <span><i class="fas fa-clock"></i> ${activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                            </p>
+                            ${church.name ? `<span class="tag" style="background-color: ${church.fondo}; color: ${church.letra};">${church.name}</span>` : ''}
+                            <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                            ${countdownHTML}
+                            <div class="activity-actions">
+                                <button class="btn-primary icon-only-btn" onclick="openDetailsModal('${activity.id}')" title="Ver Detalles (CRUD: READ)"><i class="fas fa-info"></i></button>
+                                <button class="btn-secondary icon-only-btn" onclick="openActivityModal('edit', '${activity.id}')" title="Editar Actividad (CRUD: UPDATE)"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                listEl.appendChild(listItem);
+            });
+        };
+
+        document.getElementById('search-input').addEventListener('input', renderActivityList);
+
+        // ===================================
+        // 9. CUENTA REGRESIVA Y SEMÁFORO
+        // (Mantenido del código anterior)
+        // ===================================
+
+        const getCountdown = (startDate) => {
+            const now = new Date();
+            const diff = startDate - now;
+            const totalSeconds = Math.floor(diff / 1000);
+
+            if (totalSeconds < 0) {
+                return { formattedTime: "Finalizado", shortTime: "0s", totalSeconds: totalSeconds, class: 'cd-danger' };
+            }
+
+            // Cálculo preciso de tiempo restante
+            let temp = diff;
+
+            const years = Math.floor(temp / (1000 * 60 * 60 * 24 * 365.25));
+            temp %= (1000 * 60 * 60 * 24 * 365.25);
+
+            const months = Math.floor(temp / (1000 * 60 * 60 * 24 * 30.44));
+            temp %= (1000 * 60 * 60 * 24 * 30.44);
+
+            const days = Math.floor(temp / (1000 * 60 * 60 * 24));
+            temp %= (1000 * 60 * 60 * 24);
+
+            const hours = Math.floor(temp / (1000 * 60 * 60));
+            temp %= (1000 * 60 * 60);
+
+            const minutes = Math.floor(temp / (1000 * 60));
+            const seconds = Math.floor((temp % (1000 * 60)) / 1000);
+
+            // Formato compacto: Muestra solo 3 unidades grandes
+            const partsShort = [];
+            if (years > 0) partsShort.push(`${years}a`);
+            if (months > 0) partsShort.push(`${months}m`);
+            if (days > 0) partsShort.push(`${days}d`);
+            if (hours > 0 && days < 1) partsShort.push(`${hours}h`);
+            if (minutes > 0 && days < 1 && hours < 1) partsShort.push(`${minutes}m`);
+            if (seconds > 0 && days < 1 && hours < 1 && minutes < 1) partsShort.push(`${seconds}s`);
+
+            const shortTime = partsShort.length > 0 ? partsShort.slice(0, 3).join(' ') : '¡Ya!';
+
+            // Formato largo (para tooltip)
+            const partsLong = [];
+            if (years > 0) partsLong.push(`${years} año${years !== 1 ? 's' : ''}`);
+            if (months > 0) partsLong.push(`${months} mes${months !== 1 ? 'es' : ''}`);
+            if (days > 0) partsLong.push(`${days} día${days !== 1 ? 's' : ''}`);
+            if (hours > 0) partsLong.push(`${hours} hora${hours !== 1 ? 's' : ''}`);
+            if (minutes > 0) partsLong.push(`${minutes} minuto${minutes !== 1 ? 's' : ''}`);
+            partsLong.push(`${seconds} segundo${seconds !== 1 ? 's' : ''}`);
+            const formattedTime = partsLong.join(', ');
+
+
+            // Semáforo de colores (basado en días)
+            let countdownClass = 'cd-success';
+            if (days < 7 && years === 0 && months === 0) countdownClass = 'cd-warning';
+            if (days < 1 && years === 0 && months === 0) countdownClass = 'cd-danger';
+
+            return { formattedTime, shortTime, totalSeconds, class: countdownClass };
+        };
+
+        const updateCountdowns = () => {
+            if (currentView === 'list') {
+                renderActivityList();
+            }
+        };
+
+        setInterval(updateCountdowns, 1000);
+
+        // ===================================
+        // 10. FUNCIONALIDAD DE TECLAS
+        // (Mantenido del código anterior)
+        // ===================================
+
+        document.addEventListener('keydown', (e) => {
+            // Cierre de Modales con ESC
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => closeModal(modal.id));
+                return;
+            }
+
+            // Teclas de Función (Teclado Numérico)
+            if (e.code === 'NumpadAdd' || e.key === '+') {
+                openActivityModal('create');
+                e.preventDefault();
+            } else if (e.code === 'NumpadSubtract' || e.key === '-') {
+                changeView('list');
+                document.getElementById('search-input').focus();
+                e.preventDefault();
+            } else if (e.code === 'NumpadDivide' || e.key === '/') {
+                openConfigModal();
+                e.preventDefault();
+            }
+
+            // Teclas de Navegación (Flechas) en vista Calendario
+            if (currentView === 'calendar') {
+                if (e.key === 'ArrowLeft') {
+                    prevMonth();
+                    e.preventDefault();
+                } else if (e.key === 'ArrowRight') {
+                    nextMonth();
+                    e.preventDefault();
+                } else if (e.key === 'ArrowUp') {
+                    prevYear();
+                    e.preventDefault();
+                } else if (e.key === 'ArrowDown') {
+                    nextYear();
+                    e.preventDefault();
+                }
+            }
+        });
+
+
+        // ===================================
+        // 11. CONFIGURACIÓN DE DISTRITO/IGLESIAS/DEPARTAMENTOS
+        // ===================================
+
+        const openConfigModal = () => {
+            document.getElementById('district-name').value = config.districtName;
+            renderChurchConfigList();
+            renderDepartmentConfigList();
+            document.getElementById('config-modal').style.display = 'flex';
+        };
+
+        // --- GESTIÓN DE IGLESIAS (Mejorada) ---
+
+        const renderChurchConfigList = () => {
+            const churchesList = document.getElementById('churches-config-list');
+            churchesList.innerHTML = '';
+
+            config.churches.forEach((church, index) => {
+                const div = document.createElement('div');
+                div.className = 'church-item-card';
+                div.style.backgroundColor = church.fondo;
+                div.style.color = church.letra;
+                div.dataset.churchId = church.id;
+
+                // El color de la letra se calcula automáticamente si no está definido
+                church.letra = getContrastTextColor(church.fondo);
+
+                div.innerHTML = `
+                    <div class="church-actions">
+                        <button type="button" class="btn-danger icon-only-btn" onclick="removeChurch('${church.id}')" title="Eliminar Iglesia" style="background-color: rgba(220, 53, 69, 0.7);"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <div style="text-align: center;">
+                        <i class="fas fa-church" style="font-size: 1.5em; display: block; margin-bottom: 5px;"></i>
+                        <label for="church-name-${church.id}" style="font-weight: normal; font-size: 0.8em;">${church.id}</label>
+                        <input type="text" id="church-name-${church.id}" value="${church.name}" onchange="updateChurchName('${church.id}', this.value)" placeholder="Nombre de la Iglesia">
+                        <p style="font-size: 0.7em; margin: 5px 0 0;">Fondo: ${church.fondo}</p>
+                    </div>
+                `;
+                churchesList.appendChild(div);
+            });
+        }
+
+        const addChurchInput = () => {
+            const newId = 'c' + Date.now().toString().slice(-4);
+            const defaultIndex = config.churches.length % defaultChurchColors.length;
+            const newChurch = {
+                id: newId,
+                name: `Nueva Iglesia ${config.churches.length + 1}`,
+                fondo: defaultChurchColors[defaultIndex].fondo,
+                letra: defaultChurchColors[defaultIndex].letra
+            };
+
+            // Recalcula el color de letra por si acaso
+            newChurch.letra = getContrastTextColor(newChurch.fondo);
+
+            config.churches.push(newChurch);
+            renderChurchConfigList();
+        }
+
+        const updateChurchName = (id, newName) => {
+            const church = config.churches.find(c => c.id === id);
+            if (church) {
+                church.name = newName;
+            }
+        }
+
+        const removeChurch = (id) => {
+            if(confirm(`¿Estás seguro de que quieres eliminar la iglesia "${config.churches.find(c => c.id === id)?.name}"?`)){
+                config.churches = config.churches.filter(c => c.id !== id);
+                renderChurchConfigList();
+            }
+        }
+
+
+        // --- GESTIÓN DE DEPARTAMENTOS (Nuevo) ---
+
+        const renderDepartmentConfigList = () => {
+            const departmentsList = document.getElementById('departments-config-list');
+            departmentsList.innerHTML = '';
+
+            for (const id in config.departments) {
+                const dept = config.departments[id];
+                const isDefault = Object.keys(defaultDepartments).includes(id);
+
+                const div = document.createElement('div');
+                div.className = 'department-item-row';
+                div.dataset.deptId = id;
+
+                // El color de la letra se calcula automáticamente si no está definido
+                dept.letra = getContrastTextColor(dept.fondo);
+
+                div.innerHTML = `
+                    <input type="text" id="dept-name-${id}" value="${dept.name}" onchange="updateDepartmentDetail('${id}', 'name', this.value)" placeholder="Nombre del Departamento" style="flex: 2; margin-right: 15px;">
+                    <label for="dept-color-${id}">Fondo:</label>
+                    <input type="color" id="dept-color-${id}" value="${dept.fondo}" onchange="updateDepartmentDetail('${id}', 'fondo', this.value)" title="Color de Fondo">
+                    <label for="dept-icon-${id}">Icono:</label>
+                    <input type="text" id="dept-icon-${id}" value="${dept.icon}" onchange="updateDepartmentDetail('${id}', 'icon', this.value)" placeholder="fas fa-icon" style="flex: 1; margin-right: 15px;">
+                    <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra}; font-weight: bold;"><i class="${dept.icon}"></i> TEST</span>
+                    ${!isDefault ? `<button type="button" class="btn-danger icon-only-btn" onclick="removeDepartment('${id}')" title="Eliminar Departamento"><i class="fas fa-trash-alt"></i></button>` :
+                                  `<button type="button" class="btn-secondary icon-only-btn" disabled title="No se puede eliminar un departamento predefinido"><i class="fas fa-ban"></i></button>`}
+                `;
+                departmentsList.appendChild(div);
+            }
+        }
+
+        const addDepartmentInput = () => {
+            const newId = 'dept' + Date.now().toString().slice(-4);
+            config.departments[newId] = {
+                name: "Nuevo Depto.",
+                fondo: "#00BCD4",
+                letra: "#000000",
+                icon: "fas fa-question"
+            };
+            renderDepartmentConfigList();
+        }
+
+        const updateDepartmentDetail = (id, key, value) => {
+            if (config.departments[id]) {
+                config.departments[id][key] = value;
+                // Recalcular color de letra si cambia el fondo
+                if (key === 'fondo') {
+                    const newLetra = getContrastTextColor(value);
+                    config.departments[id].letra = newLetra;
+                    // Actualizar el input de la letra (aunque lo ocultamos, es bueno mantenerlo sincronizado)
+                    document.querySelector(`#departments-config-list [data-dept-id="${id}"] .tag`).style.backgroundColor = value;
+                    document.querySelector(`#departments-config-list [data-dept-id="${id}"] .tag`).style.color = newLetra;
+                }
+                // Actualizar icono en el tag de prueba
+                if (key === 'icon') {
+                    document.querySelector(`#departments-config-list [data-dept-id="${id}"] .tag i`).className = value;
+                }
+            }
+        }
+
+        const removeDepartment = (id) => {
+            if (Object.keys(defaultDepartments).includes(id)) {
+                alert("No se puede eliminar un departamento predefinido.");
+                return;
+            }
+            if(confirm(`¿Estás seguro de que quieres eliminar el departamento "${config.departments[id].name}"? Los eventos asociados usarán el departamento 'Otro'.`)){
+                delete config.departments[id];
+                renderDepartmentConfigList();
+            }
+        }
+
+        // --- Guardar Configuración Final ---
+
+        document.getElementById('config-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Guardar configuración del distrito (Iglesias y Departamentos ya se actualizan con onchange/onclick)
+            config.districtName = document.getElementById('district-name').value;
+
+            // Limpiar la configuración de iglesias antes de guardar (por si se eliminó alguna)
+            // Se asume que las iglesias se han mantenido actualizadas en el array 'config.churches'
+
+            saveConfig();
+            loadConfig();
+            renderCalendar();
+            renderActivityList();
+            closeModal('config-modal');
+        });
+
+        const formatDataConfirm = () => {
+            // Lógica de formateo (Mantenida del código anterior, con ajustes a la config)
+            if(confirm('ADVERTENCIA CRÍTICA: ¿Estás ABSOLUTAMENTE seguro de formatear todos los datos? Esto eliminará TODAS las actividades y restaurará la configuración del distrito, iglesias y departamentos a los valores predeterminados. Esta acción es irreversible.')){
+                 if(confirm('CONFIRMA NUEVAMENTE: ¿Desea eliminar PERMANENTEMENTE todos los datos de la agenda? (CRUD: DELETE ALL)')){
+                    activities = [];
+                    saveActivities();
+
+                    config.districtName = "Fresnillo Centro";
+                    config.churches = defaultChurchColors.map(c => ({...c}));
+                    config.departments = {...defaultDepartments};
+                    saveConfig();
+
+                    alert('Datos formateados y restaurados a la configuración inicial. La aplicación se recargará.');
+                    window.location.reload();
+                }
+            }
+        }
+
+
+        // ===================================
+        // 12. EXPORTACIÓN/IMPORTACIÓN (JSON)
+        // (Mantenido del código anterior)
+        // ===================================
+
+        const exportData = () => {
+            const dataToExport = {
+                config: { ...config, currentYear: currentYear },
+                activities: activities.map(a => ({
+                    ...a,
+                    start: a.start.toISOString(),
+                    end: a.end ? a.end.toISOString() : null
+                }))
+            };
+            const json = JSON.stringify(dataToExport, null, 4);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `agenda_pastoral_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('Datos exportados exitosamente como JSON (orden 4).');
+        };
+
+        document.getElementById('import-json').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+
+                    if (importedData.config) {
+                        // Mezcla la configuración, asegurando que las propiedades básicas existan
+                        config.districtName = importedData.config.districtName || config.districtName;
+                        config.churches = importedData.config.churches || config.churches;
+                        config.departments = importedData.config.departments || config.departments;
+
+                        if (importedData.config.currentYear) {
+                            currentYear = importedData.config.currentYear;
+                        }
+                    }
+
+                    if (importedData.activities) {
+                        activities = importedData.activities.map(a => ({
+                            ...a,
+                            start: new Date(a.start),
+                            end: a.end ? new Date(a.end) : null
+                        }));
+                        activities.sort((a, b) => a.start - b.start);
+                        saveActivities();
+                    }
+
+                    alert('Datos importados correctamente. Agenda actualizada.');
+                    loadConfig();
+                    renderCalendar();
+                    renderActivityList();
+                } catch (error) {
+                    alert('Error al leer o parsear el archivo JSON: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // ===================================
+        // 13. EXPORTACIÓN DE INFORME (PDF)
+        // (Mantenido del código anterior)
+        // ===================================
+
+        const openPDFModal = () => {
+            const yearSelect = document.getElementById('pdf-year');
+            const current = new Date().getFullYear();
+            yearSelect.innerHTML = '';
+            for (let y = 2025; y <= 2045; y++) {
+                const option = document.createElement('option');
+                option.value = y;
+                option.textContent = y;
+                if (y === current) option.selected = true;
+                yearSelect.appendChild(option);
+            }
+            document.getElementById('pdf-modal').style.display = 'flex';
+        }
+
+        const exportPDF = () => {
+            closeModal('pdf-modal');
+            const { jsPDF } = window.jspdf;
+            if (!jsPDF) { alert('Librería jsPDF no cargada. Verifique su conexión.'); return; }
+            const doc = new jsPDF();
+
+            const periodInput = document.getElementById('pdf-period').value;
+            const yearInput = parseInt(document.getElementById('pdf-year').value);
+
+            let startDate, endDate, titlePeriod;
+            const currentYear = yearInput;
+            const today = new Date();
+            const monthNow = today.getFullYear() === currentYear ? today.getMonth() : 0;
+
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+            switch (periodInput.toLowerCase().trim()) {
+                case 'mes':
+                    startDate = new Date(currentYear, monthNow, 1);
+                    endDate = new Date(currentYear, monthNow + 1, 0, 23, 59, 59);
+                    titlePeriod = `Mensual: ${monthNames[monthNow]} ${currentYear}`;
+                    break;
+                case 'trimestre':
+                    const currentQuarter = Math.floor(monthNow / 3);
+                    const startMonth = currentQuarter * 3;
+                    const endMonth = currentQuarter * 3 + 2;
+                    startDate = new Date(currentYear, startMonth, 1);
+                    endDate = new Date(currentYear, endMonth + 1, 0, 23, 59, 59);
+                    titlePeriod = `Trimestral: ${monthNames[startMonth]} - ${monthNames[endMonth]} ${currentYear}`;
+                    break;
+                case 'anual':
+                    startDate = new Date(currentYear, 0, 1);
+                    endDate = new Date(currentYear, 11, 31, 23, 59, 59);
+                    titlePeriod = `Anual: ${currentYear}`;
+                    break;
+                default:
+                    alert('Período de informe inválido.');
+                    return;
+            }
+
+            const filteredActivities = activities.filter(a => a.start >= startDate && a.start <= endDate);
+
+            doc.setFontSize(16);
+            doc.text(`Informe Pastoral - Distrito ${config.districtName}`, 10, 15);
+            doc.setFontSize(12);
+            doc.text(titlePeriod, 10, 23);
+            doc.setFontSize(10);
+            doc.text(`Generado el: ${today.toLocaleDateString()}`, 10, 30);
+
+            let y = 40;
+            const lineHeight = 6;
+
+            if (filteredActivities.length === 0) {
+                doc.text('No hay actividades registradas para este período.', 10, y);
+            } else {
+                doc.setFontSize(9);
+                doc.line(10, y, 200, y);
+                y += 5;
+
+                filteredActivities.forEach((activity, index) => {
+                    if (y > 280) {
+                        doc.addPage();
+                        y = 15;
+                    }
+
+                    const dept = getDepartmentDetails(activity.department);
+                    const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : { name: "N/A" };
+
+                    doc.setFontSize(11);
+                    doc.text(`[${index + 1}] ${activity.title}`, 10, y);
+                    y += lineHeight;
+                    doc.setFontSize(8);
+
+                    let detailsLine = `Tipo: ${dept.name} | Iglesia: ${church.name}`;
+                    if (activity.brotherName) detailsLine += ` | Hno/Hogar: ${activity.brotherName}`;
+                    doc.text(detailsLine, 15, y);
+                    y += lineHeight;
+
+                    doc.text(`Inicio: ${activity.start.toLocaleString()} | Fin: ${activity.end ? activity.end.toLocaleString() : 'Mismo día'}`, 15, y);
+                    y += lineHeight;
+
+                    let notes = activity.details ? activity.details.substring(0, 80) + (activity.details.length > 80 ? '...' : '') : 'Sin detalles.';
+                    if (activity.placeName) notes = `Lugar: ${activity.placeName}. ` + notes;
+                    doc.text(`Notas: ${notes}`, 15, y);
+
+                    y += 2 * lineHeight;
+                });
+            }
+
+            doc.save(`Informe_Agenda_${periodInput}_${currentYear}.pdf`);
+        };
+
+
+        // ===================================
+        // 14. INICIALIZACIÓN
+        // ===================================
+
+        const init = () => {
+            loadConfig();
+            loadActivities();
+            renderDepartmentOptions(); // Asegura que el selector de actividad tenga las opciones
+            changeView('calendar');
+        };
+
+        init();
+    </script>
+</body>
+</html>
