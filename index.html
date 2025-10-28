@@ -347,6 +347,17 @@
         .dept-predicacion { background-color: #FF4500; color: white; font-weight: bold; }
         .dept-visitacion { background-color: #8A2BE2; color: white; font-weight: bold; }
         .dept-otro { background-color: var(--secondary-color); color: white; font-weight: bold; }
+        .dept-mmujer { background-color: #7A288A; color: white; font-weight: bold; }
+        .dept-escuelaSab { background-color: #FFC080; color: black; font-weight: bold; }
+        .dept-predicacionEs { background-color: #FF0033; color: white; font-weight: bold; }
+        .dept-predicacionSem { background-color: #FFA07A; color: black; font-weight: bold; }
+        .dept-juntaDir { background-color: #6495ED; color: white; font-weight: bold; }
+        .dept-juntaAdm { background-color: #000000; color: white; font-weight: bold; }
+        .dept-juntaAnc { background-color: #228B22; color: white; font-weight: bold; }
+        .dept-club; background-color: #228B22; color: white; font-weight: bold; }
+        .dept-reunionLai { background-color: #C6F4D6; color: black; font-weight: bold; }
+        .dept-servicioFun { background-color: #4B0082; color: white; font-weight: bold; }
+        .dept-santaCena { background-color: #C51077; color: white; font-weight: bold; }
 
         /* Botón Flotante */
         .float-btn {
@@ -452,6 +463,13 @@
             border-radius: 6px;
             text-align: center;
             margin: 0 15px;
+        }
+
+
+
+
+        .icon-only-btn {
+            width: 60px;
         }
 
     </style>
@@ -608,8 +626,8 @@
                 </div>
             </div>
             <div style="margin-top: 25px; text-align: right;">
-                <button class="btn-primary" onclick="editActivityFromDetails()"><i class="fas fa-edit"></i> Editar (CRUD: UPDATE)</button>
-                <button class="btn-danger" onclick="deleteActivityFromDetails()"><i class="fas fa-trash-alt"></i> Eliminar (CRUD: DELETE)</button>
+                <button class="btn-primary" onclick="editActivityFromDetails()"><i class="fas fa-edit"></i> </button>
+                <button class="btn-danger" onclick="deleteActivityFromDetails()"><i class="fas fa-trash-alt"></i> </button>
             </div>
         </div>
     </div>
@@ -675,18 +693,18 @@
 
         // Colores base para iglesias (12 predefinidos)
         const defaultChurchColors = [
-            { id: 'c1', name: "Iglesia 1", fondo: "#5be9f8", letra: "#000000" },
-            { id: 'c2', name: "Iglesia 2", fondo: "#FF0000", letra: "#ffffff" },
-            { id: 'c3', name: "Iglesia 3", fondo: "#00008B", letra: "#ffffff" },
-            { id: 'c4', name: "Iglesia 4", fondo: "#006847", letra: "#ffffff" },
-            { id: 'c5', name: "Iglesia 5", fondo: "#FFA500", letra: "#000000" },
-            { id: 'c6', name: "Iglesia 6", fondo: "#b33b72", letra: "#ffffff" },
-            { id: 'c7', name: "Iglesia 7", fondo: "#2adb83", letra: "#000000" },
-            { id: 'c8', name: "Iglesia 8", fondo: "#ff00cd", letra: "#ffffff" },
-            { id: 'c9', name: "Iglesia 9", fondo: "#09adff", letra: "#ffffff" },
-            { id: 'c10', name: "Iglesia 10", fondo: "#c2cc37", letra: "#000000" },
-            { id: 'c11', name: "Iglesia 11", fondo: "#fff176", letra: "#000000" },
-            { id: 'c12', name: "Iglesia 12", fondo: "#b25330", letra: "#ffffff" }
+            { id: 'c1', name: "Central Fresnillo", fondo: "#5be9f8", letra: "#000000" },
+            { id: 'c2', name: "El Ahijadero", fondo: "#FF0000", letra: "#ffffff" },
+            { id: 'c3', name: "Seis de Enero", fondo: "#00008B", letra: "#ffffff" },
+            { id: 'c4', name: "Morelos", fondo: "#006847", letra: "#ffffff" },
+            { id: 'c5', name: "Montemariana Arriba", fondo: "#FFA500", letra: "#000000" },
+            { id: 'c6', name: "El Obligado", fondo: "#b33b72", letra: "#ffffff" },
+            { id: 'c7', name: "Canaan", fondo: "#2adb83", letra: "#000000" },
+            { id: 'c8', name: "Valparaiso", fondo: "#ff00cd", letra: "#ffffff" },
+            { id: 'c9', name: "Rio de Medina", fondo: "#09adff", letra: "#ffffff" },
+            { id: 'c10', name: "La Casita", fondo: "#c2cc37", letra: "#000000" },
+            { id: 'c11', name: "Montemariana Abajo", fondo: "#fff176", letra: "#000000" },
+            { id: 'c12', name: "El Baluarte", fondo: "#b25330", letra: "#ffffff" }
         ];
 
         // Departamentos base
@@ -700,8 +718,20 @@
             mvf: { name: "Ministerio de Vida Familiar", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-heart-pulse" },
             visitacion: { name: "Visitación Pastoral", fondo: "#8A2BE2", letra: "#ffffff", icon: "fas fa-house-chimney-user" },
             predicacion: { name: "Predicación", fondo: "#FF4500", letra: "#ffffff", icon: "fas fa-book-bible" },
-            otro: { name: "Otro", fondo: "#6c757d", letra: "#ffffff", icon: "fas fa-circle-question" }
-        };
+            otro: { name: "Otro", fondo: "#6c757d", letra: "#ffffff", icon: "fas fa-circle-question" },
+            mmujer: { name: "Ministerio de la Mujer", fondo: "#7A288A", letra: "#ffffff", icon: "fas fa-female" },
+                escuelaSab: { name: "Escuela Sabática", fondo: "#FFC080", letra: "#000000", icon: "fas fa-book-open" },
+                predicacionEs: { name: "Predicación Escuela Sabática", fondo: "#FF0033", letra: "#ffffff", icon: "fas fa-bible" },
+                predicacionSem: { name: "Predicación Semanal", fondo: "#FFA07A", letra: "#000000", icon: "fas fa-calendar-alt" },
+                juntaDir: { name: "Junta Directiva", fondo: "#6495ED", letra: "#ffffff", icon: "fas fa-users-cog" },
+                juntaAdm: { name: "Junta Administrativa", fondo: "#000000", letra: "#ffffff", icon: "fas fa-lock" },
+                juntaAnc: { name: "Junta de Ancianos", fondo: "#228B22", letra: "#ffffff", icon: "fas fa-user-tie" },
+                clubLai: { name: "Club de Laicos", fondo: "#228B22", letra: "#ffffff", icon: "fas fa-hands-helping" },
+                reunionLai: { name: "Reunión de Laicos", fondo: "#C6F4D6", letra: "#000000", icon: "fas fa-users" },
+                servicioFun: { name: "Servicio Funebre", fondo: "#4B0082", letra: "#ffffff", icon: "fas fa-cross" },
+                santaCena: { name: "Santa Cena", fondo: "#C51077", letra: "#ffffff", icon: "fas fa-wine-glass-alt" }
+            };
+        
 
         let config = {
             districtName: "Fresnillo Centro",
@@ -1003,7 +1033,6 @@
             // Rellenar select de departamentos
             renderDepartmentOptions();
 
-
             if (mode === 'edit' && id) {
                 const activity = activities.find(a => a.id === id);
                 if (activity) {
@@ -1013,8 +1042,10 @@
                     document.getElementById('activity-delete-btn').style.display = 'inline-block';
 
                     document.getElementById('activity-title').value = activity.title;
-                    document.getElementById('start-date').value = activity.start.toISOString().substring(0, 16);
-                    document.getElementById('end-date').value = activity.end ? activity.end.toISOString().substring(0, 16) : '';
+                    const startDate = new Date(activity.start);
+                    const endDate = activity.end ? new Date(activity.end) : null;
+                    document.getElementById('start-date').value = getLocalISOString(startDate);
+                    document.getElementById('end-date').value = endDate ? getLocalISOString(endDate) : '';
                     document.getElementById('department').value = activity.department;
                     document.getElementById('activity-details').value = activity.details || '';
                     document.getElementById('place-name').value = activity.placeName || '';
@@ -1299,9 +1330,12 @@
             const listEl = document.getElementById('activity-list');
             const searchValue = normalizeAndTokenize(document.getElementById('search-input').value);
             const now = new Date();
+            
             listEl.innerHTML = '';
 
-            activities.forEach(activity => {
+            activities.filter(activity => activity.start >= now).sort((a, b) => (a.start - now) - (b.start - now)).forEach(activity => {
+
+            
                 const eventEnd = activity.end || activity.start;
 
                 // 1. Ocultar de la lista si el evento ya pasó
@@ -1346,7 +1380,7 @@
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
                             ${countdownHTML}
                             <div class="activity-actions">
-                                <button class="btn-primary icon-only-btn" onclick="openDetailsModal('${activity.id}')" title="Ver Detalles (CRUD: READ)"><i class="fas fa-info"></i></button>
+                                <button class="btn-primary icon-only-btn" onclick="openDetailsModal('${activity.id}')" title="Ver Detalles (CRUD: READ)"><i class="fas fa-eye">  </i></button>
                                 <button class="btn-secondary icon-only-btn" onclick="openActivityModal('edit', '${activity.id}')" title="Editar Actividad (CRUD: UPDATE)"><i class="fas fa-edit"></i></button>
                             </div>
                         </div>
@@ -1373,7 +1407,6 @@
                 return { formattedTime: "Finalizado", shortTime: "0s", totalSeconds: totalSeconds, class: 'cd-danger' };
             }
 
-            // Cálculo preciso de tiempo restante
             let temp = diff;
 
             const years = Math.floor(temp / (1000 * 60 * 60 * 24 * 365.25));
@@ -1391,7 +1424,6 @@
             const minutes = Math.floor(temp / (1000 * 60));
             const seconds = Math.floor((temp % (1000 * 60)) / 1000);
 
-            // Formato compacto: Muestra solo 3 unidades grandes
             const partsShort = [];
             if (years > 0) partsShort.push(`${years}a`);
             if (months > 0) partsShort.push(`${months}m`);
@@ -1400,9 +1432,8 @@
             if (minutes > 0 && days < 1 && hours < 1) partsShort.push(`${minutes}m`);
             if (seconds > 0 && days < 1 && hours < 1 && minutes < 1) partsShort.push(`${seconds}s`);
 
-            const shortTime = partsShort.length > 0 ? partsShort.slice(0, 3).join(' ') : '¡Ya!';
+            const shortTime = totalSeconds <= 0 ? '¡Ya!' : `${years > 0 ? years + 'a ' : ''}${months > 0 ? months + 'm ' : ''}${days > 0 ? days + 'd ' : ''}${hours > 0 || days > 0 ? hours + 'h ' : ''}${minutes}m`;
 
-            // Formato largo (para tooltip)
             const partsLong = [];
             if (years > 0) partsLong.push(`${years} año${years !== 1 ? 's' : ''}`);
             if (months > 0) partsLong.push(`${months} mes${months !== 1 ? 'es' : ''}`);
@@ -1412,8 +1443,6 @@
             partsLong.push(`${seconds} segundo${seconds !== 1 ? 's' : ''}`);
             const formattedTime = partsLong.join(', ');
 
-
-            // Semáforo de colores (basado en días)
             let countdownClass = 'cd-success';
             if (days < 7 && years === 0 && months === 0) countdownClass = 'cd-warning';
             if (days < 1 && years === 0 && months === 0) countdownClass = 'cd-danger';
@@ -1847,6 +1876,15 @@
         };
 
         init();
+
+        function getLocalISOString(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hour}:${minute}`;
+        }
     </script>
 </body>
 </html>
