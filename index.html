@@ -1006,6 +1006,24 @@
             });
         };
 
+        let touchStartX = 0;
+        document.getElementById('calendar').addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.getElementById('calendar').addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > 50) { 
+                if (diff > 0) {
+                    nextMonth(); 
+                } else {
+                    prevMonth(); 
+                }
+            }
+        });
+
         // ===================================
         // 5. MODALES Y CRUD (Activity)
         // ===================================
@@ -1302,11 +1320,17 @@
                 listEl.innerHTML = '<li style="text-align: center; color: var(--secondary-color);">No hay actividades programadas para este día. <i class="fas fa-face-smile"></i></li>';
             } else {
                 activitiesForDay.forEach(activity => {
-                    const style = getEventStyle(activity);
                     const dept = getDepartmentDetails(activity.department);
                     const listItem = document.createElement('li');
                     listItem.className = 'activity-item';
-                    listItem.style.borderLeftColor = style.fondo;
+
+                    // Determina el color de la pestañita
+                    const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : null;
+                    if (church && activity.department === 'predicacion') {
+                        listItem.style.borderLeftColor = church.fondo;
+                    } else {
+                        listItem.style.borderLeftColor = dept.fondo;
+                    }
 
                     const startTime = activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
                     const endTime = activity.end ? activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '';
@@ -1344,7 +1368,6 @@
 
             activities.filter(activity => activity.start >= now).sort((a, b) => (a.start - now) - (b.start - now)).forEach(activity => {
 
-            
                 const eventEnd = activity.end || activity.start;
 
                 // 1. Ocultar de la lista si el evento ya pasó
@@ -1365,8 +1388,13 @@
                 // 3. Crear el elemento de la lista
                 const listItem = document.createElement('li');
                 listItem.className = 'activity-item';
-                const style = getEventStyle(activity);
-                listItem.style.borderLeftColor = style.fondo;
+
+                // Determina el color de la pestañita
+                if (church && activity.department === 'predicacion') {
+                    listItem.style.borderLeftColor = church.fondo;
+                } else {
+                    listItem.style.borderLeftColor = dept.fondo;
+                }
 
                 // 4. Cuenta Regresiva
                 const countdown = getCountdown(activity.start);
