@@ -538,6 +538,106 @@
            background-color: var(--secondary-color);
            color: white;
        }
+
+
+
+
+
+       .blink {
+           animation: blink 1s infinite;
+       }
+
+       @keyframes blink {
+           0% {
+               opacity: 1;
+           }
+           50% {
+               opacity: 0;
+           }
+           100% {
+               opacity: 1;
+           }
+       }
+
+
+       .event-dot.informe-mensual-pastoral {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📝</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-mensual-tesoreria {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">💸</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-mensual-secretaria {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📨</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-mensual-plan-estrategico {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📈</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-mensual-1-millon {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">❤️</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-mensual-todo-anciano {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">👥</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-mensual-ejes-transversales {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">🔄</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-mensual-diario-gratitud {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📝</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-trimestral-ministerio-infantil {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">👧</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-trimestral-ministerio-mujer {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">👩</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+       .event-dot.informe-trimestral-ministerios-personales {
+       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">🤝</text></svg>');
+       background-size: cover;
+       animation: pulse 2s infinite;
+       }
+
+
+
+
+       .event-icon {
+           font-size: 12px;
+           text-align: center;
+           margin: 2px;
+       }
+
+       .event-dot.informe-mensual-pastoral .event-icon {
+           color: #000000; /* Ajusta el color según sea necesario */
+       }
+
+       .event-dot.informe-mensual-tesoreria .event-icon {
+           color: #ffffff; /* Ajusta el color según sea necesario */
+       }
+       /* Agrega más clases según sea necesario para cada tipo de evento */
+
+
+
+
+       
     </style>
 </head>
 <body>
@@ -755,7 +855,7 @@
 
         let currentView = 'calendar';
 
-        
+
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
         let activities = [];
@@ -798,7 +898,19 @@
                 clubLai: { name: "Club de Laicos", fondo: "#228B22", letra: "#ffffff", icon: "fas fa-hands-helping" },
                 reunionLai: { name: "Reunión de Laicos", fondo: "#C6F4D6", letra: "#000000", icon: "fas fa-users" },
                 servicioFun: { name: "Servicio Funebre", fondo: "#4B0082", letra: "#ffffff", icon: "fas fa-cross" },
-                santaCena: { name: "Santa Cena", fondo: "#C51077", letra: "#ffffff", icon: "fas fa-wine-glass-alt" }
+                santaCena: { name: "Santa Cena", fondo: "#C51077", letra: "#ffffff", icon: "fas fa-wine-glass-alt" },
+                informeMensualPastoral: { name: "Informe Pastoral", fondo: "#87CEEB", letra: "#000000", icon: "fas fa-file-alt blink" },
+                    informeMensualTesoreria: { name: "Informe de Tesorería", fondo: "#4682B4", letra: "#ffffff", icon: "fas fa-money-bill-wave blink" },
+                    informeMensualSecretaria: { name: "Informe de Secretaría", fondo: "#6495ED", letra: "#ffffff", icon: "fas fa-file-signature blink" },
+                    informeMensualPlanEstrategico: { name: "Informe del Plan Estratégico", fondo: "#00BFFF", letra: "#000000", icon: "fas fa-chart-line blink" },
+                    informeMensual1Millon: { name: "Informe de 1 Millón en Acción (Salud)", fondo: "#FFC0CB", letra: "#000000", icon: "fas fa-heartbeat blink" },
+                    informeMensualTodoAnciano: { name: "Informe de Todo Anciano Involucrado", fondo: "#C9E4CA", letra: "#000000", icon: "fas fa-users blink" },
+                    informeMensualEjesTransversales: { name: "Informe de los Ejes Transversales", fondo: "#ADD8E6", letra: "#000000", icon: "fas fa-project-diagram blink" },
+                    informeMensualDiarioGratitud: { name: "Informe del Diario de Gratitud", fondo: "#F7DC6F", letra: "#000000", icon: "fas fa-journal-whills blink" },
+                    informeTrimestralMinisterioInfantil: { name: "Ministerio Infantil y Adolescente", fondo: "#FFA07A", letra: "#000000", icon: "fas fa-child blink" },
+                    informeTrimestralMinisterioMujer: { name: "Ministerio de la Mujer", fondo: "#FFC0CB", letra: "#000000", icon: "fas fa-female blink" },
+                    informeTrimestralMinisteriosPersonales: { name: "Ministerios Personales", fondo: "#C9E4CA", letra: "#000000", icon: "fas fa-hand-holding-heart blink" },
+                    informeTrimestralEscuelaSabatica: { name: "Escuela Sabática", fondo: "#ADD8E6", letra: "#000000", icon: "fas fa-book-open blink" },
             };
         
 
@@ -913,10 +1025,6 @@
                 } else if (currentView === 'list') {
                     filtrarActividadesHoy();
                 }
-                document.getElementById('regresar-hoy').style.display = 'inline-block';
-                setTimeout(() => {
-                    document.getElementById('regresar-hoy').style.display = 'none';
-                }, 10000); // 10000 milisegundos = 10 segundos
             };
 
             const filtrarActividadesHoy = () => {
@@ -1152,25 +1260,21 @@
 
                     if (cell) {
                         if (isMobile()) {
-                            // MODO MÓVIL: Pequeños triángulos de colores
+                            // MODO MÓVIL: Pequeños iconos
                             let dotsContainer = cell.querySelector('.event-mini-dots');
                             if (!dotsContainer) {
                                 dotsContainer = document.createElement('div');
                                 dotsContainer.className = 'event-mini-dots';
                                 cell.appendChild(dotsContainer);
                             }
-                            const dot = document.createElement('div');
-                            dot.className = 'event-dot';
-                            if (activity.department === 'visitacion') {
-                                dot.classList.add('dept-visitacion-dot');
-                            } else {
-                                dot.style.backgroundColor = style.fondo;
-                            }
-                            dot.title = activity.title;
+                            const icon = document.createElement('i');
+                            icon.className = getDepartmentDetails(activity.department).icon;
+                            icon.style.color = style.fondo;
+                            icon.title = activity.title;
                             if (departmentsToBlink.includes(activity.department)) {
-                                dot.classList.add('blink');
+                                icon.classList.add('blink');
                             }
-                            dotsContainer.appendChild(dot);
+                            dotsContainer.appendChild(icon);
                         } else {
                             // MODO ESCRITORIO/TABLET: Barras de evento
                             const bar = document.createElement('div');
