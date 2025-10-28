@@ -498,6 +498,14 @@
 
 
 
+
+        .past-day {
+            background-color: #fff8f8 !important;
+        }
+
+
+        
+
     </style>
 </head>
 <body>
@@ -899,8 +907,9 @@
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayDate = new Date(currentYear, currentMonth, day);
                 const isToday = dayDate.toDateString() === today.toDateString();
+                const isPastDay = dayDate < today && !isToday;
                 const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const cellClass = isToday ? 'day-cell today' : 'day-cell';
+                const cellClass = isToday ? 'day-cell today' : (isPastDay ? 'day-cell past-day' : 'day-cell');
                 calendarEl.innerHTML += `<div class="${cellClass}" data-date="${dateStr}" id="day-cell-${day}" onclick="handleCalendarDayClick('${dateStr}')">
                                             <span class="day-number">${day}</span>
                                         </div>`;
