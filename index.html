@@ -1287,10 +1287,6 @@
             modal.style.display = 'flex';
         };
 
-        // ===================================
-        // 7. MODAL: AGENDA DIARIA (Móvil)
-        // ===================================
-
         const openDailyAgendaModal = (dateStr) => {
             const dateParts = dateStr.split('-');
             const targetDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -1332,6 +1328,18 @@
                         listItem.style.borderLeftColor = dept.fondo;
                     }
 
+                    const startDate = new Date(activity.start);
+                    const dayOfWeek = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][startDate.getDay()];
+                    const dayStyle = {
+                        "DOM": { backgroundColor: "#FF9900", color: "#FFFFFF", fontWeight: "bold" },
+                        "LUN": { backgroundColor: "#00008B", color: "#FFFFFF" },
+                        "MAR": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                        "MIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                        "JUE": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                        "VIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                        "SAB": { backgroundColor: "#008000", color: "#FFFFFF", fontWeight: "bold" }
+                    };
+
                     const startTime = activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
                     const endTime = activity.end ? activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '';
 
@@ -1340,8 +1348,8 @@
                             <div>
                                 <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
                                 <p style="margin: 3px 0; font-size: 0.8em;">
-                                    <span><i class="fas fa-clock"></i> ${startTime}</span>
-                                    ${activity.end ? ` - ${endTime}` : ''}
+                                    <span style="background-color: ${dayStyle[dayOfWeek].backgroundColor}; color: ${dayStyle[dayOfWeek].color}; font-weight: ${dayStyle[dayOfWeek].fontWeight || 'normal'}; padding: 2px 5px; border-radius: 5px;">${dayOfWeek}</span> 
+                                    ${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()} ${startDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                                 </p>
                                 <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
                             </div>
