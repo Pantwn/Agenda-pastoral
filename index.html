@@ -527,6 +527,21 @@
            }
        }
 
+
+
+       .view-button.btn-primary {
+           background-color: var(--primary-color);
+           color: white;
+       }
+
+       .view-button.btn-secondary {
+           background-color: var(--secondary-color);
+           color: white;
+       }
+
+
+
+       
     </style>
 </head>
 <body>
@@ -544,8 +559,8 @@
         </header>
 
         <div class="view-selector">
-            <button class="btn-primary icon-only-btn" onclick="changeView('calendar')" id="btn-calendar-view" title="Calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
-            <button class="btn-secondary icon-only-btn" onclick="changeView('list')" id="btn-list-view" title="Lista de Actividades (Presiona -)"><i class="fas fa-list"></i><span>Lista</span></button>
+            <button class="btn-primary icon-only-btn view-button" id="btn-calendar-view" onclick="changeView('calendar')" title="Calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
+            <button class="btn-secondary icon-only-btn view-button" id="btn-list-view" onclick="changeView('list')" title="Lista de Actividades (Presiona -)"><i class="fas fa-list"></i><span>Lista</span></button>
             <button id="regresar-hoy" class="btn-secondary icon-only-btn" onclick="regresarHoy()" title="" style="display: none;"><i class="fas fa-calendar-day"></i> </button>
         </div>
 
@@ -863,6 +878,8 @@
             // Determina si el dispositivo es móvil (usado para la lógica de visualización del calendario)
             const isMobile = () => window.innerWidth <= 767;
 
+            let currentView = 'calendar';
+
             const changeView = (view) => {
                 currentView = view;
                 document.querySelectorAll('.view-content').forEach(el => el.style.display = 'none');
@@ -894,7 +911,11 @@
                 currentYear = new Date().getFullYear();
                 config.currentYear = currentYear;
                 saveConfig();
-                renderCalendar();
+                if (currentView === 'calendar') {
+                    renderCalendar();
+                } else if (currentView === 'list') {
+                    filtrarActividadesHoy();
+                }
             };
 
             const filtrarActividadesHoy = () => {
@@ -955,10 +976,14 @@
                                         <span><i class="fas fa-clock"></i> ${startTime}</span>
                                     </p>
                                     <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
+                                    ${church.name ? `<span class="tag" style="background-color: ${church.fondo}; color: ${church.letra};">${church.name}</span>` : ''}
                                 </div>
                                 <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
                                     <button class="btn-primary" style="padding: 5px 10px; display: flex; align-items: center;" onclick="openDetailsModal('${activity.id}')" title="Ver Detalles">
                                         <i class="fas fa-info" style="margin-right: 5px;"></i> Info
+                                    </button>
+                                    <button class="btn-secondary" style="padding: 5px 10px; display: flex; align-items: center;" onclick="openActivityModal('edit', '${activity.id}')" title="Editar">
+                                        <i class="fas fa-edit" style="margin-right: 5px;"></i> Editar
                                     </button>
                                 </div>
                             </div>
