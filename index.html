@@ -538,10 +538,6 @@
            background-color: var(--secondary-color);
            color: white;
        }
-
-
-
-       
     </style>
 </head>
 <body>
@@ -758,6 +754,8 @@
         // ===================================
 
         let currentView = 'calendar';
+
+        
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
         let activities = [];
@@ -878,8 +876,7 @@
             // Determina si el dispositivo es móvil (usado para la lógica de visualización del calendario)
             const isMobile = () => window.innerWidth <= 767;
 
-            let currentView = 'calendar';
-
+           
             const changeView = (view) => {
                 currentView = view;
                 document.querySelectorAll('.view-content').forEach(el => el.style.display = 'none');
@@ -916,6 +913,10 @@
                 } else if (currentView === 'list') {
                     filtrarActividadesHoy();
                 }
+                document.getElementById('regresar-hoy').style.display = 'inline-block';
+                setTimeout(() => {
+                    document.getElementById('regresar-hoy').style.display = 'none';
+                }, 5000); // 5000 milisegundos = 5 segundos
             };
 
             const filtrarActividadesHoy = () => {
