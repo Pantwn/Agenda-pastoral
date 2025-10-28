@@ -546,7 +546,7 @@
         <div class="view-selector">
             <button class="btn-primary icon-only-btn" onclick="changeView('calendar')" id="btn-calendar-view" title="Calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
             <button class="btn-secondary icon-only-btn" onclick="changeView('list')" id="btn-list-view" title="Lista de Actividades (Presiona -)"><i class="fas fa-list"></i><span>Lista</span></button>
-            <button id="regresar-hoy" class="btn-secondary icon-only-btn" onclick="regresarHoy()" title="Regresar a hoy" style="display: none;"><i class="fas fa-calendar-day"></i> </button>
+            <button id="regresar-hoy" class="btn-secondary icon-only-btn" onclick="regresarHoy()" title="" style="display: none;"><i class="fas fa-calendar-day"></i> </button>
         </div>
 
         <div class="main-grid">
@@ -856,7 +856,7 @@
         };
 
 
-        // ===================================
+            // ===================================
             // 3. VISTAS Y NAVEGACIÓN
             // ===================================
 
@@ -874,12 +874,17 @@
                 if (view === 'calendar') {
                     renderCalendar();
                     document.getElementById('regresar-hoy').style.display = 'inline-block';
-                } else {
-                    document.getElementById('regresar-hoy').style.display = 'none';
+                    document.getElementById('regresar-hoy').onclick = regresarHoy;
+                    document.getElementById('regresar-hoy').title = '';
+                    document.getElementById('regresar-hoy').innerHTML = '<i class="fas fa-calendar-day"></i> ';
+                } else if (view === 'list') {
+                    renderActivityList();
+                    document.getElementById('regresar-hoy').style.display = 'inline-block';
+                    document.getElementById('regresar-hoy').onclick = filtrarActividadesHoy;
+                    document.getElementById('regresar-hoy').title = '';
+                    document.getElementById('regresar-hoy').innerHTML = '<i class="fas fa-filter"></i> ';
                 }
 
-                if (view === 'list') renderActivityList();
-                
                 // Renderizar opciones de departamentos en el modal de actividad
                 if (view === 'calendar' || view === 'list') renderDepartmentOptions();
             };
@@ -890,6 +895,77 @@
                 config.currentYear = currentYear;
                 saveConfig();
                 renderCalendar();
+            };
+
+            const filtrarActividadesHoy = () => {
+                const hoy = new Date();
+                const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
+                const finHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+
+                const actividadesHoy = activities.filter(activity => {
+                    const startDate = new Date(activity.start);
+                    const endDate = activity.end ? new Date(activity.end) : startDate;
+
+                    return (startDate >= inicioHoy && startDate <= finHoy) || 
+                           (endDate >= inicioHoy && endDate <= finHoy) || 
+                           (startDate <= inicioHoy && endDate >= finHoy);
+                });
+
+                const fechaHoy = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+                document.getElementById('search-input').value = '';
+                document.getElementById('search-input').placeholder = `Actividades del ${fechaHoy}`;
+
+                // Renderiza la lista de actividades
+                const listEl = document.getElementById('activity-list');
+                listEl.innerHTML = '';
+
+                if (actividadesHoy.length === 0) {
+                    listEl.innerHTML = '<li style="text-align: center; color: var(--secondary-color);">No hay actividades programadas para hoy. <i class="fas fa-face-smile"></i></li>';
+                } else {
+                    actividadesHoy.forEach(activity => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'activity-item';
+
+                        // Resto del código para renderizar cada actividad
+                        const dept = getDepartmentDetails(activity.department);
+                        const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : { name: "" };
+
+                        const startDate = new Date(activity.start);
+                        const dayOfWeek = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][startDate.getDay()];
+                        const dayStyle = {
+                            "DOM": { backgroundColor: "#FF9900", color: "#FFFFFF", fontWeight: "bold" },
+                            "LUN": { backgroundColor: "#4E97D1", color: "#FFFFFF", fontWeight: "bold" },
+                            "MAR": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                            "MIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                            "JUE": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                            "VIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                            "SAB": { backgroundColor: "#008000", color: "#FFFFFF", fontWeight: "bold" }
+                        };
+
+                        const startTime = activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                        const endTime = activity.end ? activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '';
+
+                        listItem.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
+                                    <p style="margin: 3px 0; font-size: 0.8em;">
+                                        <span style="background-color: ${dayStyle[dayOfWeek].backgroundColor}; color: ${dayStyle[dayOfWeek].color}; font-weight: ${dayStyle[dayOfWeek].fontWeight || 'normal'}; padding: 2px 5px; border-radius: 5px;">${dayOfWeek}</span> 
+                                        <span><i class="fas fa-calendar-alt"></i> ${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}</span>
+                                        <span><i class="fas fa-clock"></i> ${startTime}</span>
+                                    </p>
+                                    <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                                    <button class="btn-primary" style="padding: 5px 10px; display: flex; align-items: center;" onclick="openDetailsModal('${activity.id}')" title="Ver Detalles">
+                                        <i class="fas fa-info" style="margin-right: 5px;"></i> Info
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        listEl.appendChild(listItem);
+                    });
+                }
             };
 
             const renderDepartmentOptions = () => {
