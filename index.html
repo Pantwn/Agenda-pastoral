@@ -474,6 +474,30 @@
             width: 60px;
         }
 
+
+
+
+
+
+        .blink {
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+
+
     </style>
 </head>
 <body>
@@ -945,6 +969,8 @@
             renderCalendar();
         };
 
+        const departmentsToBlink = ['mn', 'mj', 'mi', 'ms', 'mp', 'mm', 'mvf', 'mmujer', 'escuelaSab'];
+
         const placeEventsOnCalendar = (daysInMonth) => {
             const startOfMonth = new Date(currentYear, currentMonth, 1);
             const endOfMonth = new Date(currentYear, currentMonth, daysInMonth, 23, 59, 59);
@@ -990,6 +1016,9 @@
                             dot.className = 'event-dot';
                             dot.style.backgroundColor = style.fondo;
                             dot.title = activity.title;
+                            if (departmentsToBlink.includes(activity.department)) {
+                                dot.classList.add('blink');
+                            }
                             dotsContainer.appendChild(dot);
 
                         } else {
