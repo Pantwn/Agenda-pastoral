@@ -546,6 +546,7 @@
         <div class="view-selector">
             <button class="btn-primary icon-only-btn" onclick="changeView('calendar')" id="btn-calendar-view" title="Calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
             <button class="btn-secondary icon-only-btn" onclick="changeView('list')" id="btn-list-view" title="Lista de Actividades (Presiona -)"><i class="fas fa-list"></i><span>Lista</span></button>
+            <button id="regresar-hoy" class="btn-secondary icon-only-btn" onclick="regresarHoy()" title="Regresar a hoy" style="display: none;"><i class="fas fa-calendar-day"></i> </button>
         </div>
 
         <div class="main-grid">
@@ -856,44 +857,58 @@
 
 
         // ===================================
-        // 3. VISTAS Y NAVEGACIÓN
-        // ===================================
+            // 3. VISTAS Y NAVEGACIÓN
+            // ===================================
 
-        // Determina si el dispositivo es móvil (usado para la lógica de visualización del calendario)
-        const isMobile = () => window.innerWidth <= 767;
+            // Determina si el dispositivo es móvil (usado para la lógica de visualización del calendario)
+            const isMobile = () => window.innerWidth <= 767;
 
-        const changeView = (view) => {
-            currentView = view;
-            document.querySelectorAll('.view-content').forEach(el => el.style.display = 'none');
-            document.getElementById(`${view}-container`).style.display = 'block';
+            const changeView = (view) => {
+                currentView = view;
+                document.querySelectorAll('.view-content').forEach(el => el.style.display = 'none');
+                document.getElementById(`${view}-container`).style.display = 'block';
 
-            document.getElementById('btn-calendar-view').className = (view === 'calendar') ? 'btn-primary icon-only-btn' : 'btn-secondary icon-only-btn';
-            document.getElementById('btn-list-view').className = (view === 'list') ? 'btn-primary icon-only-btn' : 'btn-secondary icon-only-btn';
+                document.getElementById('btn-calendar-view').className = (view === 'calendar') ? 'btn-primary icon-only-btn' : 'btn-secondary icon-only-btn';
+                document.getElementById('btn-list-view').className = (view === 'list') ? 'btn-primary icon-only-btn' : 'btn-secondary icon-only-btn';
 
-            if (view === 'calendar') renderCalendar();
-            if (view === 'list') renderActivityList();
-            
-            // Renderizar opciones de departamentos en el modal de actividad
-            if (view === 'calendar' || view === 'list') renderDepartmentOptions();
-        };
+                if (view === 'calendar') {
+                    renderCalendar();
+                    document.getElementById('regresar-hoy').style.display = 'inline-block';
+                } else {
+                    document.getElementById('regresar-hoy').style.display = 'none';
+                }
 
-        const renderDepartmentOptions = () => {
-            const deptSelect = document.getElementById('department');
-            if (!deptSelect) return;
-            
-            deptSelect.innerHTML = '';
-            
-            for (const id in config.departments) {
-                const dept = config.departments[id];
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = dept.name;
-                option.style.backgroundColor = dept.fondo;
-                option.style.color = dept.letra;
-                option.style.fontWeight = 'bold';
-                deptSelect.appendChild(option);
-            }
-        };
+                if (view === 'list') renderActivityList();
+                
+                // Renderizar opciones de departamentos en el modal de actividad
+                if (view === 'calendar' || view === 'list') renderDepartmentOptions();
+            };
+
+            const regresarHoy = () => {
+                currentMonth = new Date().getMonth();
+                currentYear = new Date().getFullYear();
+                config.currentYear = currentYear;
+                saveConfig();
+                renderCalendar();
+            };
+
+            const renderDepartmentOptions = () => {
+                const deptSelect = document.getElementById('department');
+                if (!deptSelect) return;
+                
+                deptSelect.innerHTML = '';
+                
+                for (const id in config.departments) {
+                    const dept = config.departments[id];
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = dept.name;
+                    option.style.backgroundColor = dept.fondo;
+                    option.style.color = dept.letra;
+                    option.style.fontWeight = 'bold';
+                    deptSelect.appendChild(option);
+                }
+            };
 
         // ===================================
         // 4. LÓGICA DEL CALENDARIO
