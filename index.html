@@ -1274,15 +1274,20 @@
         // ===================================
 
         const openDailyAgendaModal = (dateStr) => {
-            // Lógica de agenda diaria (Mantenida del código anterior)
-            const targetDate = new Date(dateStr);
-            targetDate.setHours(12, 0, 0, 0);
+            const dateParts = dateStr.split('-');
+            const targetDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            targetDate.setHours(0, 0, 0, 0);
+
+            const nextDay = new Date(targetDate);
+            nextDay.setDate(targetDate.getDate() + 1);
 
             const activitiesForDay = activities.filter(a => {
-                const aStart = new Date(a.start.getFullYear(), a.start.getMonth(), a.start.getDate());
-                const aEnd = a.end ? new Date(a.end.getFullYear(), a.end.getMonth(), a.end.getDate()) : aStart;
+                const aStart = new Date(a.start);
+                const aEnd = a.end ? new Date(a.end) : aStart;
 
-                return targetDate.getTime() >= aStart.getTime() && targetDate.getTime() <= aEnd.getTime();
+                return (aStart >= targetDate && aStart < nextDay) || 
+                       (aEnd > targetDate && aEnd <= nextDay) || 
+                       (aStart < targetDate && aEnd > nextDay);
             });
 
             activitiesForDay.sort((a, b) => a.start - b.start);
@@ -1290,7 +1295,8 @@
             const listEl = document.getElementById('daily-activity-list');
             listEl.innerHTML = '';
 
-            document.getElementById('daily-agenda-date-title').textContent = `Agenda para: ${targetDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`;
+            const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('daily-agenda-date-title').textContent = `Agenda para: ${targetDate.toLocaleDateString('es-ES', dateOptions)}`;
 
             if (activitiesForDay.length === 0) {
                 listEl.innerHTML = '<li style="text-align: center; color: var(--secondary-color);">No hay actividades programadas para este día. <i class="fas fa-face-smile"></i></li>';
@@ -1302,13 +1308,16 @@
                     listItem.className = 'activity-item';
                     listItem.style.borderLeftColor = style.fondo;
 
+                    const startTime = activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                    const endTime = activity.end ? activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '';
+
                     listItem.innerHTML = `
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div>
                                 <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
                                 <p style="margin: 3px 0; font-size: 0.8em;">
-                                    <span><i class="fas fa-clock"></i> ${activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
-                                    ${activity.end ? ` - ${activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}` : ''}
+                                    <span><i class="fas fa-clock"></i> ${startTime}</span>
+                                    ${activity.end ? ` - ${endTime}` : ''}
                                 </p>
                                 <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
                             </div>
@@ -1873,6 +1882,13 @@
             loadActivities();
             renderDepartmentOptions(); // Asegura que el selector de actividad tenga las opciones
             changeView('calendar');
+
+            // Agregar evento de doble clic al campo de búsqueda
+            document.getElementById('search-input').addEventListener('dblclick', function() {
+                this.value = '';
+                this.focus();
+                renderActivityList(); // Agrega esta línea para actualizar la lista de actividades
+            });
         };
 
         init();
@@ -1885,6 +1901,9 @@
             const minute = String(date.getMinutes()).padStart(2, '0');
             return `${year}-${month}-${day}T${hour}:${minute}`;
         }
+
+        
+
     </script>
 </body>
 </html>
