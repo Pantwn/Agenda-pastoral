@@ -199,7 +199,9 @@
             border-radius: 8px;
             overflow: hidden;
             background-color: white;
+             gap: 1px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            justify-content: center !important; /* Centra el calendario en la pantalla */
         }
         .day-header {
             background-color: var(--primary-color);
@@ -209,7 +211,9 @@
             font-weight: bold;
         }
         .day-cell {
-            min-height: 120px;
+            min-height: 100px; /* Establece un tamaño mínimo para las celdas */
+              max-height: 150px; /* Establece un tamaño máximo para las celdas */
+             
             padding: 5px;
             border: 1px solid var(--border-color);
             border-width: 0 1px 1px 0;
@@ -217,6 +221,7 @@
             background-color: #fff;
             transition: background-color 0.2s;
             cursor: pointer;
+             overflow-y: auto; /* Agrega un scroll vertical si el contenido es demasiado grande */
         }
         .day-cell:hover {
             background-color: var(--accent-light);
@@ -360,6 +365,14 @@
         .dept-reunionLai { background-color: #C6F4D6; color: black; font-weight: bold; }
         .dept-servicioFun { background-color: #4B0082; color: white; font-weight: bold; }
         .dept-santaCena { background-color: #C51077; color: white; font-weight: bold; }
+        .dept-UMN { background-color: #CD7F32; color: #000000; font-weight: bold; }
+        .dept-UMN .tag { animation: pulse 2s infinite; }
+
+        .dept-DIA { background-color: #C0C0C0; color: #000000; font-weight: bold; }
+        .dept-DIA .tag { animation: pulse 2s infinite; }
+
+        .dept-AG { background-color: #FFD700; color: #000000; font-weight: bold; }
+        .dept-AG .tag { animation: pulse 2s infinite; }
 
         /* Botón Flotante */
         .float-btn {
@@ -560,62 +573,7 @@
        }
 
 
-       .event-dot.informe-mensual-pastoral {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📝</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-mensual-tesoreria {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">💸</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-mensual-secretaria {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📨</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-mensual-plan-estrategico {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📈</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-mensual-1-millon {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">❤️</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-mensual-todo-anciano {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">👥</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-mensual-ejes-transversales {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">🔄</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-mensual-diario-gratitud {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">📝</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-trimestral-ministerio-infantil {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">👧</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-trimestral-ministerio-mujer {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">👩</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-       .event-dot.informe-trimestral-ministerios-personales {
-       background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="12" y="18" font-size="18" text-anchor="middle" fill="%23ffffff">🤝</text></svg>');
-       background-size: cover;
-       animation: pulse 2s infinite;
-       }
-
+       
 
 
 
@@ -637,6 +595,54 @@
 
 
 
+
+
+
+
+
+       .pdf-container {
+         font-family: Arial, sans-serif;
+         font-size: 12px;
+       }
+
+       .pdf-title {
+         font-size: 18px;
+         font-weight: bold;
+         color: #00698f;
+       }
+
+       .pdf-subtitle {
+         font-size: 14px;
+         font-weight: bold;
+         color: #666;
+       }
+
+       .pdf-table {
+         border-collapse: collapse;
+         width: 100%;
+       }
+
+       .pdf-table th, .pdf-table td {
+         border: 1px solid #ddd;
+         padding: 8px;
+         text-align: left;
+       }
+
+       .pdf-table th {
+         background-color: #f0f0f0;
+       }
+
+
+
+
+
+      .event-mini-dots {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px; /* Ajusta el valor según sea necesario */
+      }
+
+       
        
     </style>
 </head>
@@ -878,39 +884,43 @@
 
         // Departamentos base
         const defaultDepartments = {
-            mn: { name: "Misión Noroccidental", fondo: "#000000", letra: "#ffffff", icon: "fas fa-mountain" },
+            mn: { name: "Misión Noroccidental", fondo: "#000000", letra: "#ffffff", icon: "fas fa-building" },
             mj: { name: "Ministerio Juvenil", fondo: "#00008B", letra: "#ffffff", icon: "fas fa-users" },
-            mi: { name: "Ministerio Infantil", fondo: "#FF69B4", letra: "#ffffff", icon: "fas fa-child-reaching" },
+            mi: { name: "Ministerio Infantil", fondo: "#FF69B4", letra: "#ffffff", icon: "fas fa-child" },
             ms: { name: "Ministerio de Salud", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-stethoscope" },
             mp: { name: "Ministerios Personales", fondo: "#008000", letra: "#ffffff", icon: "fas fa-hand-holding-heart" },
             mm: { name: "Ministerio de Mayordomía", fondo: "#654321", letra: "#ffffff", icon: "fas fa-piggy-bank" },
-            mvf: { name: "Ministerio de Vida Familiar", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-heart-pulse" },
+            mvf: { name: "Ministerio de Vida Familiar", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-home" },
             visitacion: { name: "Visitación Pastoral", fondo: "#8A2BE2", letra: "#ffffff", icon: "fas fa-house-chimney-user" },
-            predicacion: { name: "Predicación", fondo: "#FF4500", letra: "#ffffff", icon: "fas fa-book-bible" },
+            predicacion: { name: "Predicación", fondo: "#FF4500", letra: "#ffffff", icon: "fas fa-church" },
             otro: { name: "Otro", fondo: "#6c757d", letra: "#ffffff", icon: "fas fa-circle-question" },
             mmujer: { name: "Ministerio de la Mujer", fondo: "#7A288A", letra: "#ffffff", icon: "fas fa-female" },
                 escuelaSab: { name: "Escuela Sabática", fondo: "#FFC080", letra: "#000000", icon: "fas fa-book-open" },
                 predicacionEs: { name: "Predicación Escuela Sabática", fondo: "#FF0033", letra: "#ffffff", icon: "fas fa-bible" },
-                predicacionSem: { name: "Predicación Semanal", fondo: "#FFA07A", letra: "#000000", icon: "fas fa-calendar-alt" },
+                predicacionSem: { name: "Predicación Semanal", fondo: "#fe8931", letra: "#000000", icon: "fas fa-calendar-alt" },
                 juntaDir: { name: "Junta Directiva", fondo: "#6495ED", letra: "#ffffff", icon: "fas fa-users-cog" },
                 juntaAdm: { name: "Junta Administrativa", fondo: "#000000", letra: "#ffffff", icon: "fas fa-lock" },
-                juntaAnc: { name: "Junta de Ancianos", fondo: "#228B22", letra: "#ffffff", icon: "fas fa-user-tie" },
-                clubLai: { name: "Club de Laicos", fondo: "#228B22", letra: "#ffffff", icon: "fas fa-hands-helping" },
-                reunionLai: { name: "Reunión de Laicos", fondo: "#C6F4D6", letra: "#000000", icon: "fas fa-users" },
-                servicioFun: { name: "Servicio Funebre", fondo: "#4B0082", letra: "#ffffff", icon: "fas fa-cross" },
+                juntaAnc: { name: "Junta de Ancianos", fondo: "#e4717a", letra: "#ffffff", icon: "fas fa-user-tie" },
+                clubLai: { name: "Club de Laicos", fondo: "#99FF00", letra: "#ffffff", icon: "fas fa-cross" },
+                reunionLai: { name: "Reunión de Laicos", fondo: "#99FF00", letra: "#000000", icon: "fas fa-users" },
+                servicioFun: { name: "Servicio Funebre", fondo: "#bc4ed8", letra: "#ffffff", icon: "fas fa-cross" },
                 santaCena: { name: "Santa Cena", fondo: "#C51077", letra: "#ffffff", icon: "fas fa-wine-glass-alt" },
                 informeMensualPastoral: { name: "Informe Pastoral", fondo: "#87CEEB", letra: "#000000", icon: "fas fa-file-alt blink" },
                     informeMensualTesoreria: { name: "Informe de Tesorería", fondo: "#4682B4", letra: "#ffffff", icon: "fas fa-money-bill-wave blink" },
-                    informeMensualSecretaria: { name: "Informe de Secretaría", fondo: "#6495ED", letra: "#ffffff", icon: "fas fa-file-signature blink" },
+                    informeMensualSecretaria: { name: "Informe de Secretaría", fondo: "#171a4a", letra: "#ffffff", icon: "fas fa-file-signature blink" },
                     informeMensualPlanEstrategico: { name: "Informe del Plan Estratégico", fondo: "#00BFFF", letra: "#000000", icon: "fas fa-chart-line blink" },
-                    informeMensual1Millon: { name: "Informe de 1 Millón en Acción (Salud)", fondo: "#FFC0CB", letra: "#000000", icon: "fas fa-heartbeat blink" },
-                    informeMensualTodoAnciano: { name: "Informe de Todo Anciano Involucrado", fondo: "#C9E4CA", letra: "#000000", icon: "fas fa-users blink" },
+                    informeMensual1Millon: { name: "Informe de 1 Millón en Acción (Salud)", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-heartbeat blink" },
+                    informeMensualTodoAnciano: { name: "Informe de Todo Anciano Involucrado", fondo: "#C9E4CA", letra: "#000000", icon: "fas fa-praying-hands blink" },
                     informeMensualEjesTransversales: { name: "Informe de los Ejes Transversales", fondo: "#ADD8E6", letra: "#000000", icon: "fas fa-project-diagram blink" },
-                    informeMensualDiarioGratitud: { name: "Informe del Diario de Gratitud", fondo: "#F7DC6F", letra: "#000000", icon: "fas fa-journal-whills blink" },
-                    informeTrimestralMinisterioInfantil: { name: "Ministerio Infantil y Adolescente", fondo: "#FFA07A", letra: "#000000", icon: "fas fa-child blink" },
-                    informeTrimestralMinisterioMujer: { name: "Ministerio de la Mujer", fondo: "#FFC0CB", letra: "#000000", icon: "fas fa-female blink" },
-                    informeTrimestralMinisteriosPersonales: { name: "Ministerios Personales", fondo: "#C9E4CA", letra: "#000000", icon: "fas fa-hand-holding-heart blink" },
-                    informeTrimestralEscuelaSabatica: { name: "Escuela Sabática", fondo: "#ADD8E6", letra: "#000000", icon: "fas fa-book-open blink" },
+                    informeMensualDiarioGratitud: { name: "Informe del Diario de Gratitud", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-gift blink" },
+                    informeTrimestralMinisterioInfantil: { name: "Ministerio Infantil y Adolescente", fondo: "#FF69B4", letra: "#000000", icon: "fas fa-child blink" },
+                    informeTrimestralMinisterioMujer: { name: "Ministerio de la Mujer", fondo: "#7A288A", letra: "#000000", icon: "fas fa-venus blink" },
+                    informeTrimestralMinisteriosPersonales: { name: "Ministerios Personales", fondo: "#008000", letra: "#000000", icon: "fas fa-hand-holding-heart blink" },
+                    informeTrimestralEscuelaSabatica: { name: "Escuela Sabática", fondo: "#ff0000", letra: "#000000", icon: "fas fa-book-open blink" },
+                    UMN: { name: "Unión Mexicana del Norte", fondo: "#CD7F32", letra: "#000000", icon: "fas fa-handshake blink" },
+                        DIA: { name: "División Interamericana", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-globe-americas blink" },
+                        AG: { name: "Asociación General", fondo: "#FFD700", letra: "#000000", icon: "fas fa-globe blink" },
+
             };
         
 
@@ -1224,7 +1234,7 @@
             renderCalendar();
         };
 
-        const departmentsToBlink = ['mn', 'mj', 'mi', 'ms', 'mp', 'mm', 'mvf', 'mmujer', 'escuelaSab'];
+        const departmentsToBlink = ['mn', 'mj', 'mi', 'ms', 'mp', 'mm', 'mvf', 'mmujer', 'escuelaSab', 'UMN', 'DIA', 'AG'];
 
         const placeEventsOnCalendar = (daysInMonth) => {
             const startOfMonth = new Date(currentYear, currentMonth, 1);
@@ -2115,96 +2125,99 @@
         }
 
         const exportPDF = () => {
-            closeModal('pdf-modal');
-            const { jsPDF } = window.jspdf;
-            if (!jsPDF) { alert('Librería jsPDF no cargada. Verifique su conexión.'); return; }
-            const doc = new jsPDF();
+          closeModal('pdf-modal');
+          const { jsPDF } = window.jspdf;
+          if (!jsPDF) { 
+            alert('Librería jsPDF no cargada. Verifique su conexión.'); 
+            return; 
+          }
+          const doc = new jsPDF();
 
-            const periodInput = document.getElementById('pdf-period').value;
-            const yearInput = parseInt(document.getElementById('pdf-year').value);
+          const periodInput = document.getElementById('pdf-period').value;
+          const yearInput = parseInt(document.getElementById('pdf-year').value);
 
-            let startDate, endDate, titlePeriod;
-            const currentYear = yearInput;
-            const today = new Date();
-            const monthNow = today.getFullYear() === currentYear ? today.getMonth() : 0;
+          let startDate, endDate, titlePeriod;
+          const currentYear = yearInput;
+          const today = new Date();
+          const monthNow = today.getFullYear() === currentYear ? today.getMonth() : 0;
 
-            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+          const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-            switch (periodInput.toLowerCase().trim()) {
-                case 'mes':
-                    startDate = new Date(currentYear, monthNow, 1);
-                    endDate = new Date(currentYear, monthNow + 1, 0, 23, 59, 59);
-                    titlePeriod = `Mensual: ${monthNames[monthNow]} ${currentYear}`;
-                    break;
-                case 'trimestre':
-                    const currentQuarter = Math.floor(monthNow / 3);
-                    const startMonth = currentQuarter * 3;
-                    const endMonth = currentQuarter * 3 + 2;
-                    startDate = new Date(currentYear, startMonth, 1);
-                    endDate = new Date(currentYear, endMonth + 1, 0, 23, 59, 59);
-                    titlePeriod = `Trimestral: ${monthNames[startMonth]} - ${monthNames[endMonth]} ${currentYear}`;
-                    break;
-                case 'anual':
-                    startDate = new Date(currentYear, 0, 1);
-                    endDate = new Date(currentYear, 11, 31, 23, 59, 59);
-                    titlePeriod = `Anual: ${currentYear}`;
-                    break;
-                default:
-                    alert('Período de informe inválido.');
-                    return;
-            }
+          switch (periodInput.toLowerCase().trim()) {
+            case 'mes':
+              startDate = new Date(currentYear, monthNow, 1);
+              endDate = new Date(currentYear, monthNow + 1, 0, 23, 59, 59);
+              titlePeriod = `Mensual: ${monthNames[monthNow]} ${currentYear}`;
+              break;
+            case 'trimestre':
+              const currentQuarter = Math.floor(monthNow / 3);
+              const startMonth = currentQuarter * 3;
+              const endMonth = currentQuarter * 3 + 2;
+              startDate = new Date(currentYear, startMonth, 1);
+              endDate = new Date(currentYear, endMonth + 1, 0, 23, 59, 59);
+              titlePeriod = `Trimestral: ${monthNames[startMonth]} - ${monthNames[endMonth]} ${currentYear}`;
+              break;
+            case 'anual':
+              startDate = new Date(currentYear, 0, 1);
+              endDate = new Date(currentYear, 11, 31, 23, 59, 59);
+              titlePeriod = `Anual: ${currentYear}`;
+              break;
+            default:
+              alert('Período de informe inválido.');
+              return;
+          }
 
-            const filteredActivities = activities.filter(a => a.start >= startDate && a.start <= endDate);
+          const filteredActivities = activities.filter(a => a.start >= startDate && a.start <= endDate);
 
-            doc.setFontSize(16);
-            doc.text(`Informe Pastoral - Distrito ${config.districtName}`, 10, 15);
-            doc.setFontSize(12);
-            doc.text(titlePeriod, 10, 23);
-            doc.setFontSize(10);
-            doc.text(`Generado el: ${today.toLocaleDateString()}`, 10, 30);
+          doc.setFontSize(18);
+          doc.text(`Informe Pastoral - Distrito ${config.districtName}`, 10, 15);
+          doc.setFontSize(14);
+          doc.text(titlePeriod, 10, 23);
+          doc.setFontSize(10);
+          doc.text(`Generado el: ${today.toLocaleDateString()}`, 10, 30);
 
-            let y = 40;
-            const lineHeight = 6;
+          let y = 40;
+          const lineHeight = 6;
 
-            if (filteredActivities.length === 0) {
-                doc.text('No hay actividades registradas para este período.', 10, y);
-            } else {
-                doc.setFontSize(9);
-                doc.line(10, y, 200, y);
-                y += 5;
+          if (filteredActivities.length === 0) {
+            doc.text('No hay actividades registradas para este período.', 10, y);
+          } else {
+            filteredActivities.forEach((activity, index) => {
+              if (y > 280) {
+                doc.addPage();
+                y = 15;
+              }
 
-                filteredActivities.forEach((activity, index) => {
-                    if (y > 280) {
-                        doc.addPage();
-                        y = 15;
-                    }
+              const dept = getDepartmentDetails(activity.department);
+              const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : { name: "N/A", color: "#CCCCCC" };
 
-                    const dept = getDepartmentDetails(activity.department);
-                    const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : { name: "N/A" };
+              doc.setFontSize(12);
+              doc.text(`[${index + 1}] ${activity.title.replace(/[^a-zA-Z0-9\s.,!?-]/g, '')}`, 10, y);
+              y += lineHeight;
+              doc.setFontSize(10);
 
-                    doc.setFontSize(11);
-                    doc.text(`[${index + 1}] ${activity.title}`, 10, y);
-                    y += lineHeight;
-                    doc.setFontSize(8);
+              if (church && church.color) {
+                doc.setFillColor(church.color);
+              } else {
+                doc.setFillColor('#CCCCCC'); // Color por defecto
+              }
+              doc.rect(10, y - 4, 4, 4, 'F');
+              doc.text(`Tipo: ${dept.name} | Iglesia: ${church.name}`, 15, y);
+              y += lineHeight;
 
-                    let detailsLine = `Tipo: ${dept.name} | Iglesia: ${church.name}`;
-                    if (activity.brotherName) detailsLine += ` | Hno/Hogar: ${activity.brotherName}`;
-                    doc.text(detailsLine, 15, y);
-                    y += lineHeight;
+              doc.text(`Inicio: ${activity.start.toLocaleString()} | Fin: ${activity.end ? activity.end.toLocaleString() : 'Mismo día'}`, 10, y);
+              y += lineHeight;
 
-                    doc.text(`Inicio: ${activity.start.toLocaleString()} | Fin: ${activity.end ? activity.end.toLocaleString() : 'Mismo día'}`, 15, y);
-                    y += lineHeight;
+              let notes = activity.details ? activity.details : 'Sin detalles.';
+              if (activity.placeName) notes = `Lugar: ${activity.placeName}. ` + notes;
+              const splitNotes = doc.splitTextToSize(`Notas: ${notes.replace(/[^a-zA-Z0-9\s.,!?-]/g, '')}`, 190);
+              doc.text(splitNotes.join('\n'), 10, y);
+              y += (splitNotes.length) * lineHeight;
+              });
+              }
 
-                    let notes = activity.details ? activity.details.substring(0, 80) + (activity.details.length > 80 ? '...' : '') : 'Sin detalles.';
-                    if (activity.placeName) notes = `Lugar: ${activity.placeName}. ` + notes;
-                    doc.text(`Notas: ${notes}`, 15, y);
-
-                    y += 2 * lineHeight;
-                });
-            }
-
-            doc.save(`Informe_Agenda_${periodInput}_${currentYear}.pdf`);
-        };
+              doc.save(`Informe_Agenda_${periodInput}_${currentYear}.pdf`);
+              };
 
 
         // ===================================
