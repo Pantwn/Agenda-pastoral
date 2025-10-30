@@ -357,11 +357,10 @@
 
         .dept-UMN { 
             background-color: #CD7F32; 
-            color: #FFFFFF; 
+            color: #FFFFFF !important; 
             font-weight: bold; 
             /* ¡Añade esta línea! */
             display: inline-block; 
-            
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
             padding: 10px; 
             border-radius: 5px;
@@ -782,6 +781,44 @@
               box-shadow: 0 6px 15px rgba(255, 193, 7, 0.5); /* Sombra resaltada */
           }
 
+
+
+
+
+
+        /* Estilos para el botón flotante de descarga */
+        #download-float-btn {
+            position: fixed;
+            top: 20px; /* Separación de la parte superior */
+            left: 20px; /* Separación de la izquierda */
+            z-index: 5000; /* Asegura que esté por encima de otros elementos */
+            background-color: var(--primary-color); /* Color primario */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Forma circular */
+            width: 50px;
+            height: 50px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            opacity: 0; /* Inicialmente oculto */
+            transition: opacity 0.5s ease-in-out;
+            
+            /* === CAMBIOS CLAVE PARA EL CENTRADO === */
+            display: flex; 
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente */
+            /* ===================================== */
+        }
+
+        #download-float-btn:hover {
+            background-color: #0b5ed7; /* Un tono más oscuro al pasar el mouse */
+        }
+
+        /* Clase para mostrar el botón */
+        #download-float-btn.show {
+            opacity: 1;
+        }
           
 
     </style>
@@ -799,6 +836,8 @@
                 <button class="btn-warning icon-only-btn" onclick="openPDFModal()" title="Informe PDF"><i class="fas fa-file-pdf"></i><span>Informe PDF</span></button>
             </div>
         </header>
+
+
 
         <div class="botones-flotantes">
             
@@ -819,6 +858,10 @@
             </button>
         
         </div>
+
+        <button id="download-float-btn" title="Descargar la última Agenda de la MISION NOROCCIDENTAL (Ctrl+Shift+↓)">
+            <i class="fas fa-cloud-download-alt"></i>
+        </button>
 
         <div class="main-grid">
             <div id="calendar-container" class="view-content">
@@ -949,7 +992,7 @@
                     <strong><i class="fas fa-map-pin"></i> Lugar:</strong> <span id="details-place-name" style="font-weight: bold; margin-left: 5px;"></span>
                     <a id="details-map-link" target="_blank" class="btn-secondary icon-only-btn" style="margin-left: 10px; text-decoration: none; padding: 5px 10px;" title="Abrir en Google Maps"><i class="fas fa-external-link-alt"></i></a>
 
-                    <h4 style="margin-top: 15px; margin-bottom: 5px;">Vista Previa del Mapa:</h4>
+                    <h4 style="margin-top: 15px; margin-bottom: 5px;">Vista previa del Mapa / Pagina Web:</h4>
                     <iframe id="details-map-iframe" width="100%" height="250" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
@@ -1009,6 +1052,19 @@
             let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
             return (luminance > 0.5) ? '#000000' : '#ffffff';
         }
+
+
+        // ===================================
+        // 0. CONFIGURACIÓN EXTERNA
+        // ===================================
+
+        const EXTERNAL_AGENDA_URL = 'https://archive.org/download/agenda-mision-noroccidental-2025-2026/AGENDA%20MISION%20NOROCCIDENTAL%202025-2026.json'; // <--- ¡REEMPLAZA ESTA URL!
+
+        // ... el resto de tu código
+
+
+
+
 
         // ===================================
         // 1. CONFIGURACIÓN INICIAL & DATOS BASE
@@ -1134,6 +1190,9 @@
 
                     };
         
+
+
+
 
         let config = {
             districtName: "Fresnillo Centro",
@@ -1820,6 +1879,7 @@
 
         const openDailyAgendaModal = (dateStr) => {
             const dateParts = dateStr.split('-');
+            // Aseguramos que targetDate sea un objeto Date
             const targetDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
             targetDate.setHours(0, 0, 0, 0);
 
@@ -1831,8 +1891,8 @@
                 const aEnd = a.end ? new Date(a.end) : aStart;
 
                 return (aStart >= targetDate && aStart < nextDay) || 
-                       (aEnd > targetDate && aEnd <= nextDay) || 
-                       (aStart < targetDate && aEnd > nextDay);
+                        (aEnd > targetDate && aEnd <= nextDay) || 
+                        (aStart < targetDate && aEnd > nextDay);
             });
 
             activitiesForDay.sort((a, b) => a.start - b.start);
@@ -1843,6 +1903,17 @@
             const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             document.getElementById('daily-agenda-date-title').textContent = `Agenda para: ${targetDate.toLocaleDateString('es-ES', dateOptions)}`;
 
+            // Definimos el dayStyle aquí o lo tomamos si es global
+            const dayStyle = {
+                "DOM": { backgroundColor: "#FF9900", color: "#FFFFFF", fontWeight: "bold" },
+                "LUN": { backgroundColor: "#4E97D1", color: "#FFFFFF", fontWeight: "bold" },
+                "MAR": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                "MIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                "JUE": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                "VIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                "SAB": { backgroundColor: "#008000", color: "#FFFFFF", fontWeight: "bold" }
+            };
+
             if (activitiesForDay.length === 0) {
                 listEl.innerHTML = '<li style="text-align: center; color: var(--secondary-color);">No hay actividades programadas para este día. <i class="fas fa-face-smile"></i></li>';
             } else {
@@ -1850,6 +1921,7 @@
                     const dept = getDepartmentDetails(activity.department);
                     const listItem = document.createElement('li');
                     listItem.className = 'activity-item';
+                    listItem.setAttribute('onclick', `openActivityModal('edit', '${activity.id}')`); // Permite editar al hacer clic
 
                     // Determina el color de la pestañita
                     const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : null;
@@ -1859,33 +1931,34 @@
                         listItem.style.borderLeftColor = dept.fondo;
                     }
 
-                    const startDate = new Date(activity.start);
-                    const dayOfWeek = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][startDate.getDay()];
-                    const dayStyle = {
-                        "DOM": { backgroundColor: "#FF9900", color: "#FFFFFF", fontWeight: "bold" },
-                        "LUN": { backgroundColor: "#4E97D1", color: "#FFFFFF", fontWeight: "bold" },
-                        "MAR": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
-                        "MIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
-                        "JUE": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
-                        "VIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
-                        "SAB": { backgroundColor: "#008000", color: "#FFFFFF", fontWeight: "bold" }
-                    };
+                    // ******************************************************
+                    // LÓGICA DE FORMATO DE FECHA INICIO/FIN CON ICONOS FAS
+                    // ******************************************************
+                    let dateHtmlContent = formatActivityDateHTML(activity.start, dayStyle, true); 
+                    
+                    if (activity.end && activity.end.getTime() !== activity.start.getTime()) {
+                        // Si la fecha de fin existe y es diferente a la de inicio
+                        const endHtmlContent = formatActivityDateHTML(activity.end, dayStyle, false);
+                        dateHtmlContent = `${dateHtmlContent} <span style="font-weight: bold; margin: 0 5px; color: var(--secondary-color);">al</span> ${endHtmlContent}`;
+                    }
+                    
+                    const fullDateHtml = `<p style="margin: 3px 0; font-size: 0.85em; display: flex; align-items: center; flex-wrap: wrap;">${dateHtmlContent}</p>`;
+                    // ******************************************************
 
-                    const startTime = activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                    const endTime = activity.end ? activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '';
+                    const churchTag = church ? `<span class="tag" style="background-color: ${church.fondo}; color: ${church.letra};">${church.name}</span>` : '';
+                    const deptTag = `<span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>`;
 
                     listItem.innerHTML = `
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div>
                                 <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
-                                <p style="margin: 3px 0; font-size: 0.8em;">
-                                    <span style="background-color: ${dayStyle[dayOfWeek].backgroundColor}; color: ${dayStyle[dayOfWeek].color}; font-weight: ${dayStyle[dayOfWeek].fontWeight || 'normal'}; padding: 2px 5px; border-radius: 5px;">${dayOfWeek}</span> 
-                                    <span><i class="fas fa-calendar-alt"></i> ${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}</span>
-                                    <span><i class="fas fa-clock"></i> ${startDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
-                                </p>
-                                <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
+                                ${fullDateHtml} 
+                                <div style="margin-top: 5px;">
+                                    ${churchTag}
+                                    ${deptTag}
+                                </div>
                             </div>
-                            <button class="btn-primary" style="padding: 5px 10px; display: flex; align-items: center;" onclick="closeModal('daily-agenda-modal'); openDetailsModal('${activity.id}')" title="Ver Detalles">
+                            <button class="btn-primary" style="padding: 5px 10px; display: flex; align-items: center; white-space: nowrap;" onclick="closeModal('daily-agenda-modal'); openDetailsModal('${activity.id}')" title="Ver Detalles">
                                 <i class="fas fa-info" style="margin-right: 5px;"></i> Info
                             </button>
                         </div>
@@ -1895,12 +1968,12 @@
             }
 
             document.getElementById('daily-agenda-modal').style.display = 'flex';
-        }
+        };
 
 
 
         // ===================================
-        // FUNCIÓN AUXILIAR DE FORMATO DE FECHA (CON ICONO fas fa-calendar-alt)
+        // FUNCIÓN AUXILIAR DE FORMATO DE FECHA
         // ===================================
         const formatActivityDateHTML = (dateObject, dayStyle, isStart = true) => {
             if (!dateObject) return '';
@@ -1908,14 +1981,23 @@
             // Obtener índice y nombre del día de la semana (0=Dom, 6=Sáb)
             const dayIndex = dateObject.getDay(); 
             const dayName = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][dayIndex];
-            // Obtener los estilos de color de tu objeto dayStyle
-            const style = dayStyle[dayName]; 
+            // Asumimos que dayStyle está definido
+            const dayStyleMap = { 
+                "DOM": { backgroundColor: "#FF9900", color: "#FFFFFF", fontWeight: "bold" },
+                "LUN": { backgroundColor: "#4E97D1", color: "#FFFFFF", fontWeight: "bold" },
+                "MAR": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                "MIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                "JUE": { backgroundColor: "#FF00FF", color: "#FFFFFF", fontWeight: "bold" },
+                "VIE": { backgroundColor: "#FFFF00", color: "#000000", fontWeight: "bold" },
+                "SAB": { backgroundColor: "#008000", color: "#FFFFFF", fontWeight: "bold" }
+            };
+            const style = dayStyleMap[dayName]; 
 
             // Formato de fecha y hora
             const datePart = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
             const timePart = dateObject.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
-            // Iconos (verde para inicio, rojo para fin)
+            // Iconos de inicio/fin
             const iconClass = isStart ? 'fas fa-play-circle' : 'fas fa-stop-circle';
             const iconColor = isStart ? '#198754' : '#dc3545'; 
             
@@ -2577,6 +2659,17 @@
               };
 
 
+
+
+
+
+
+
+
+
+
+
+
         // ===================================
         // 14. INICIALIZACIÓN
         // ===================================
@@ -2593,12 +2686,13 @@
                 this.focus();
                 renderActivityList(); // Agrega esta línea para actualizar la lista de actividades
             });
+            setupDownloadButton();
         };
 
         // Dentro de tu función init() (o al final del script):
         document.getElementById('search-btn').addEventListener('click', () => toggleTodayFilter());
 
-        init();
+       
 
         function getLocalISOString(date) {
             const year = date.getFullYear();
@@ -2610,6 +2704,128 @@
         }
 
         
+
+
+        // ===================================
+        // 15. CARGAR AGENDA JSON DESDE URL EXTERNA (AHORA USA FETCH PARA CARGAR EN MEMORIA)
+        // ===================================
+        const downloadExternalAgenda = async () => {
+            try {
+                console.log(`Intentando cargar agenda desde: ${EXTERNAL_AGENDA_URL}`);
+                
+                // 1. Petición para obtener el JSON
+                const response = await fetch(EXTERNAL_AGENDA_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}. No se pudo acceder o el archivo no existe.`);
+                }
+
+                // 2. Leer el JSON en memoria
+                const activitiesData = await response.json(); 
+                
+                // 3. Procesar los datos (Merge/Overwrite)
+                processImportedActivities(activitiesData);
+
+            } catch (error) {
+                console.error('Error al cargar la agenda:', error);
+                
+                // Muestra una alerta específica si falla
+                alert(`❌ Error al cargar la agenda externa: ${error.message}.
+                
+                Asegúrate de que:
+                1. La URL sea correcta.
+                2. El archivo sea un JSON válido.
+                3. El servidor permita la carga cruzada (CORS). Si ves un error de CORS, esta funcionalidad no podrá funcionar desde esa URL.`);
+            }
+        };
+
+
+
+        // ===================================
+        // 16. CONTROL DEL BOTÓN FLOTANTE Y ATAJOS
+        // ===================================
+        const setupDownloadButton = () => {
+            const floatBtn = document.getElementById('download-float-btn');
+
+            // 1. Mostrar/Ocultar el botón por 20 segundos
+            floatBtn.classList.add('show');
+            setTimeout(() => {
+                floatBtn.classList.remove('show');
+            }, 5000); // 20000 milisegundos = 20 segundos
+
+            // 2. Vincular el clic del botón a la función de descarga
+            floatBtn.addEventListener('click', downloadExternalAgenda);
+
+            // 3. Vincular el atajo de teclado: CTR + SHIFT + FLECHA ABAJO
+            document.addEventListener('keydown', (e) => {
+                // e.key === 'ArrowDown' es la tecla ↓
+                if (e.ctrlKey && e.shiftKey && e.key === 'ArrowDown') {
+                    e.preventDefault(); // Evita el comportamiento por defecto (scroll)
+                    downloadExternalAgenda();
+                }
+            });
+        };
+
+
+
+
+        // ===================================
+        // 17. PROCESAR AGENDA IMPORTADA (FUSIÓN/SOBREESCRITURA)
+        // ===================================
+        const processImportedActivities = (newActivitiesData) => {
+            if (!Array.isArray(newActivitiesData)) {
+                alert('❌ Error: El archivo cargado no parece ser una lista de actividades válida (debe ser un array JSON).');
+                return;
+            }
+            
+            // 1. Convertir las cadenas de fecha (ISO strings) a objetos Date
+            const newActivities = newActivitiesData.map(activity => ({
+                ...activity,
+                // Convertir start y end de string a Date
+                start: new Date(activity.start),
+                end: activity.end ? new Date(activity.end) : null
+            }));
+
+            // 2. Pedir al usuario la acción (Overwrite o Merge)
+            const mode = prompt(
+                '¡Agenda externa lista para cargar!\n\n' +
+                'Escribe "SOBREESCRIBIR" para reemplazar la agenda actual.\n' +
+                'Escribe "AGREGAR" para añadir estas actividades a la agenda actual.\n' +
+                '(Cualquier otra cosa o cancelar, anulará la operación)', 
+                'AGREGAR'
+            );
+
+            if (mode === null) {
+                alert('Operación de carga de agenda cancelada.');
+                return;
+            }
+
+            let finalActivities = [];
+            const importCount = newActivities.length;
+
+            if (mode.toUpperCase() === 'SOBREESCRIBIR') {
+                finalActivities = newActivities;
+                alert(`✅ Agenda sobrescrita con éxito. ${importCount} actividades cargadas.`);
+            } else if (mode.toUpperCase() === 'AGREGAR') {
+                // Conserva las actividades existentes y añade las nuevas
+                finalActivities = activities.concat(newActivities);
+                alert(`✅ Agenda agregada con éxito. Se añadieron ${importCount} actividades a las ${activities.length} existentes.`);
+            } else {
+                alert('Opción no reconocida. La carga de la agenda ha sido cancelada.');
+                return;
+            }
+
+            // 3. Actualizar el array global, guardar y refrescar la vista
+            activities = finalActivities;
+            saveActivities(); 
+            
+            // Refrescar la UI
+            renderActivityList(); 
+            renderCalendar(); 
+        };
+
+
+        init();
 
     </script>
 </body>
