@@ -792,7 +792,7 @@
         <header style="margin-bottom: 20px; border-bottom: 3px solid var(--primary-color); padding-bottom: 10px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
             <h1 id="district-title" style="margin: 0;"><i class="fas fa-church"></i> Agenda Pastoral</h1>
             <div class="header-buttons">
-                <button class="btn-secondary icon-only-btn" onclick="openConfigModal()" title="Configuración (Presiona /)"><i class="fas fa-cog"></i><span>Configurar</span></button>
+                <button class="btn-secondary icon-only-btn" onclick="openConfigModal()" title="Configuración (Presiona Alt + /)"><i class="fas fa-cog"></i><span>Configurar</span></button>
                 <button class="btn-secondary icon-only-btn" onclick="exportData()" title="Exportar JSON"><i class="fas fa-file-export"></i><span>Exportar JSON</span></button>
                 <label class="btn-secondary btn icon-only-btn" for="import-json" style="cursor: pointer;" title="Importar JSON"><i class="fas fa-file-import"></i><span>Importar JSON</span></label>
                 <input type="file" id="import-json" accept=".json" style="display: none;">
@@ -801,15 +801,23 @@
         </header>
 
         <div class="botones-flotantes">
+            
+            
+            <button class="btn-secondary icon-only-btn view-button" id="btn-list-view" onclick="changeView('list')" title="Lista de Actividades (Presiona ALT + '-')"><i class="fas fa-list"></i><span>Lista</span></button>
+
             <button class="btn-primary icon-only-btn view-button" id="btn-calendar-view" onclick="changeView('calendar')" title="Calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
-            <button class="btn-secondary icon-only-btn view-button" id="btn-list-view" onclick="changeView('list')" title="Lista de Actividades (Presiona -)"><i class="fas fa-list"></i><span>Lista</span></button>
+            
             <button id="regresar-hoy" class="btn-secondary icon-only-btn" onclick="regresarHoy()" title="" style="display: none;"><i class="fas fa-calendar-day"></i> </button>
-            <button class="float-btn" id="add-activity-btn" onclick="openActivityModal('create')" title="Agregar Actividad (Presiona '+')">
+            
+            <button class="float-btn" id="add-activity-btn" onclick="openActivityModal('create')" title="Agregar Actividad (Presiona Alt + '+')">
                 <i class="fas fa-plus"></i>
             </button>
+            
+            
             <button class="float-btn-search" id="search-btn" title="Buscar">
                 <i class="fas fa-search"></i>
             </button>
+        
         </div>
 
         <div class="main-grid">
@@ -1273,8 +1281,9 @@
                         const dept = getDepartmentDetails(activity.department);
                         const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : { name: "" };
 
-                        const startDate = new Date(activity.start);
-                        const dayOfWeek = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][startDate.getDay()];
+                        const fechaInicio = new Date(activity.start);
+                        const fechaFin = activity.end ? new Date(activity.end) : null;
+                        const dayOfWeek = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][fechaInicio.getDay()];
                         const dayStyle = {
                             "DOM": { backgroundColor: "#FF9900", color: "#FFFFFF", fontWeight: "bold" },
                             "LUN": { backgroundColor: "#4E97D1", color: "#FFFFFF", fontWeight: "bold" },
@@ -1285,8 +1294,18 @@
                             "SAB": { backgroundColor: "#008000", color: "#FFFFFF", fontWeight: "bold" }
                         };
 
-                        const startTime = activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                        const endTime = activity.end ? activity.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '';
+                        let dateText = '';
+                        if (fechaFin) {
+                            dateText = `
+                                <span><i class="fas fa-calendar-alt"></i> ${fechaInicio.getDate()}/${fechaInicio.getMonth() + 1}/${fechaInicio.getFullYear()} al ${fechaFin.getDate()}/${fechaFin.getMonth() + 1}/${fechaFin.getFullYear()}</span>
+                                <span><i class="fas fa-clock"></i> ${fechaInicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - ${fechaFin.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                            `;
+                        } else {
+                            dateText = `
+                                <span><i class="fas fa-calendar-alt"></i> ${fechaInicio.getDate()}/${fechaInicio.getMonth() + 1}/${fechaInicio.getFullYear()}</span>
+                                <span><i class="fas fa-clock"></i> ${fechaInicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+                            `;
+                        }
 
                         listItem.innerHTML = `
                             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
@@ -1294,8 +1313,13 @@
                                     <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
                                     <p style="margin: 3px 0; font-size: 0.8em;">
                                         <span style="background-color: ${dayStyle[dayOfWeek].backgroundColor}; color: ${dayStyle[dayOfWeek].color}; font-weight: ${dayStyle[dayOfWeek].fontWeight || 'normal'}; padding: 2px 5px; border-radius: 5px;">${dayOfWeek}</span> 
-                                        <span><i class="fas fa-calendar-alt"></i> ${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}</span>
-                                        <span><i class="fas fa-clock"></i> ${startTime}</span>
+                                        ${fechaFin ? 
+                                            `<span><i class="fas fa-calendar-alt"></i> ${fechaInicio.getDate()}/${fechaInicio.getMonth() + 1}/${fechaInicio.getFullYear()} al ${fechaFin.getDate()}/${fechaFin.getMonth() + 1}/${fechaFin.getFullYear()}</span>
+                                            <span><i class="fas fa-clock"></i> ${fechaInicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - ${fechaFin.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>` 
+                                            : 
+                                            `<span><i class="fas fa-calendar-alt"></i> ${fechaInicio.getDate()}/${fechaInicio.getMonth() + 1}/${fechaInicio.getFullYear()}</span>
+                                            <span><i class="fas fa-clock"></i> ${fechaInicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>`
+                                        }
                                     </p>
                                     <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
                                     ${church.name ? `<span class="tag" style="background-color: ${church.fondo}; color: ${church.letra};">${church.name}</span>` : ''}
@@ -1873,8 +1897,49 @@
             document.getElementById('daily-agenda-modal').style.display = 'flex';
         }
 
+
+
         // ===================================
-        // 8. LISTA DE ACTIVIDADES & BÚSQUEDA
+        // FUNCIÓN AUXILIAR DE FORMATO DE FECHA (CON ICONO fas fa-calendar-alt)
+        // ===================================
+        const formatActivityDateHTML = (dateObject, dayStyle, isStart = true) => {
+            if (!dateObject) return '';
+
+            // Obtener índice y nombre del día de la semana (0=Dom, 6=Sáb)
+            const dayIndex = dateObject.getDay(); 
+            const dayName = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][dayIndex];
+            // Obtener los estilos de color de tu objeto dayStyle
+            const style = dayStyle[dayName]; 
+
+            // Formato de fecha y hora
+            const datePart = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
+            const timePart = dateObject.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+            // Iconos (verde para inicio, rojo para fin)
+            const iconClass = isStart ? 'fas fa-play-circle' : 'fas fa-stop-circle';
+            const iconColor = isStart ? '#198754' : '#dc3545'; 
+            
+            // Estilo del nombre del día (DOM, LUN, etc.)
+            const dayNameHtml = `<span style="background-color: ${style.backgroundColor}; color: ${style.color}; font-weight: ${style.fontWeight || 'normal'}; padding: 2px 5px; border-radius: 5px; margin-right: 5px;">${dayName}</span>`;
+
+            return `
+                <span style="display: inline-flex; align-items: center; white-space: nowrap;">
+                    <i class="${iconClass}" style="color: ${iconColor}; margin-right: 5px; font-size: 0.9em;"></i>
+                    ${dayNameHtml}
+                    <i class="fas fa-calendar-alt" style="margin-right: 5px;"></i>
+                    <span>${datePart}</span>
+                    <span style="margin-left: 5px;"><i class="fas fa-clock"></i> ${timePart}</span>
+                </span>
+            `;
+        };
+
+
+
+
+
+
+        // ===================================
+        // 8. LISTA DE ACTIVIDADES & BÚSQUEDA (CORREGIDA Y FINAL)
         // ===================================
 
         const renderActivityList = () => {
@@ -1882,6 +1947,7 @@
             const searchValue = normalizeAndTokenize(document.getElementById('search-input').value);
             const now = new Date();
 
+            // TU dayStyle ORIGINAL
             const dayStyle = {
                 "DOM": { backgroundColor: "#FF9900", color: "#FFFFFF", fontWeight: "bold" },
                 "LUN": { backgroundColor: "#4E97D1", color: "#FFFFFF", fontWeight: "bold" },
@@ -1902,11 +1968,12 @@
                 if (eventEnd < now) return;
 
                 // 2. Lógica de Búsqueda "Súper Poderosa" (Ignora acentos y orden)
+                // Se asume que config.churches es un array y tiene 'id', 'fondo', y 'letra'
                 const church = activity.churchId ? config.churches.find(c => c.id === activity.churchId) : { name: "" };
-                const dept = getDepartmentDetails(activity.department);
+                const dept = getDepartmentDetails(activity.department); // Se asume que getDepartmentDetails existe
 
                 const searchString = `${activity.title} ${activity.details} ${dept.name} ${church.name} ${activity.preachingType || ''} ${activity.brotherName || ''} ${activity.placeName || ''}`;
-                const normalizedSearch = normalizeAndTokenize(searchString);
+                const normalizedSearch = normalizeAndTokenize(searchString); // Se asume que normalizeAndTokenize existe
 
                 // Comprueba que CADA token de búsqueda esté presente en ALGÚN token normalizado del evento
                 const matches = searchValue.every(token => normalizedSearch.some(normalizedToken => normalizedToken.includes(token)));
@@ -1916,6 +1983,8 @@
                 // 3. Crear el elemento de la lista
                 const listItem = document.createElement('li');
                 listItem.className = 'activity-item';
+                listItem.setAttribute('onclick', `openActivityModal('edit', '${activity.id}')`);
+                listItem.style.cursor = 'pointer';
 
                 // Determina el color de la pestañita
                 if (church && activity.department === 'predicacion') {
@@ -1924,28 +1993,37 @@
                     listItem.style.borderLeftColor = dept.fondo;
                 }
 
-                // 4. Cuenta Regresiva
-                const countdown = getCountdown(activity.start);
+                // 4. LÓGICA DE FORMATO DE FECHA INICIO/FIN (CORRECCIÓN)
+                let dateHtmlContent = formatActivityDateHTML(activity.start, dayStyle, true); // Fecha de Inicio
+                
+                if (activity.end && activity.end.getTime() !== activity.start.getTime()) {
+                    // Se verifica que la fecha de fin exista y que no sea exactamente la misma que la de inicio
+                    const endHtmlContent = formatActivityDateHTML(activity.end, dayStyle, false);
+                    dateHtmlContent = `${dateHtmlContent} <span style="font-weight: bold; margin: 0 5px; color: var(--secondary-color);">al</span> ${endHtmlContent}`;
+                }
+                
+                const fullDateHtml = `<p style="margin: 3px 0; font-size: 0.85em; display: flex; align-items: center; flex-wrap: wrap;">${dateHtmlContent}</p>`;
+
+
+                // 5. Cuenta Regresiva
+                const countdown = getCountdown(activity.start); // Se asume que getCountdown existe
                 const countdownClass = countdown.class;
 
                 let countdownHTML = `<span class="countdown-time ${countdownClass}" title="Faltan ${countdown.formattedTime}">${countdown.shortTime}</span>`;
 
+                // 6. Construcción Final del HTML
                 listItem.innerHTML = `
                     <div class="activity-item-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
                         <div style="flex-grow: 1;">
                             <strong><i class="${dept.icon}"></i> ${activity.title}</strong>
-                            <p style="margin: 3px 0; font-size: 0.85em;">
-                                <span style="background-color: ${dayStyle[["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][activity.start.getDay()]].backgroundColor}; color: ${dayStyle[["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][activity.start.getDay()]].color}; font-weight: ${dayStyle[["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][activity.start.getDay()]].fontWeight || 'normal'}; padding: 2px 5px; border-radius: 5px;">${["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"][activity.start.getDay()]}</span> 
-                                <span><i class="fas fa-calendar-alt"></i> ${activity.start.getDate()}/${activity.start.getMonth() + 1}/${activity.start.getFullYear()}</span>
-                                <span><i class="fas fa-clock"></i> ${activity.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
-                            </p>
+                            ${fullDateHtml}
                             ${church.name ? `<span class="tag" style="background-color: ${church.fondo}; color: ${church.letra};">${church.name}</span>` : ''}
                             <span class="tag" style="background-color: ${dept.fondo}; color: ${dept.letra};">${dept.name}</span>
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
                             ${countdownHTML}
                             <div class="activity-actions">
-                                <button class="btn-primary icon-only-btn" onclick="openDetailsModal('${activity.id}')" title="Ver Detalles (CRUD: READ)"><i class="fas fa-eye">  </i></button>
+                                <button class="btn-primary icon-only-btn" onclick="openDetailsModal('${activity.id}')" title="Ver Detalles (CRUD: READ)"><i class="fas fa-eye"></i></button>
                                 <button class="btn-secondary icon-only-btn" onclick="openActivityModal('edit', '${activity.id}')" title="Editar Actividad (CRUD: UPDATE)"><i class="fas fa-edit"></i></button>
                             </div>
                         </div>
@@ -1957,6 +2035,19 @@
         };
 
         document.getElementById('search-input').addEventListener('input', renderActivityList);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // ===================================
         // 9. CUENTA REGRESIVA Y SEMÁFORO
@@ -2015,6 +2106,11 @@
             return { formattedTime, shortTime, totalSeconds, class: countdownClass };
         };
 
+
+
+
+
+
         const updateCountdowns = () => {
             if (currentView === 'list') {
                 renderActivityList();
@@ -2039,11 +2135,11 @@
             // Teclas de Función (Teclado Numérico y Alt)
             // ===========================================
             
-            // Función Añadir: '+' o NumpadAdd
-            if (e.code === 'NumpadAdd' || e.key === '+') {
-                openActivityModal('create');
-                e.preventDefault();
-            }
+            // Función Añadir: ALT + '+' o Alt + NumpadAdd
+                if ((e.code === 'NumpadAdd' || e.key === '+') && e.altKey) {
+                    openActivityModal('create');
+                    e.preventDefault();
+                }
             
             // Función Formatear: ALT + Backspace (Inicia la doble confirmación)
             else if (e.altKey && e.key === 'Backspace') {
@@ -2062,32 +2158,56 @@
                 e.preventDefault();
             }
             
-            // Función Configuración: '/' o NumpadDivide
-            else if (e.code === 'NumpadDivide' || e.key === '/') {
-                openConfigModal();
-                e.preventDefault();
-            }
-
-            // Teclas de Navegación (Flechas) en vista Calendario
-            if (currentView === 'calendar') {
-                // Flechas Izquierda/Derecha (Cambio de Mes - No requiere Alt)
-                if (e.key === 'ArrowLeft') {
-                    prevMonth();
-                    e.preventDefault();
-                } else if (e.key === 'ArrowRight') {
-                    nextMonth();
-                    e.preventDefault();
-                } 
-                // Flechas Arriba/Abajo (Cambio de AÑO - REQUIERE ALT)
-                else if (e.key === 'ArrowUp' && e.altKey) { 
-                    prevYear();
-                    e.preventDefault();
-                } else if (e.key === 'ArrowDown' && e.altKey) {
-                    nextYear();
+            // Función Configuración: ALT + '/' o Alt + NumpadDivide
+                // Requiere e.altKey para evitar interferir con la escritura.
+                else if ((e.code === 'NumpadDivide' || e.key === '/') && e.altKey) { 
+                    openConfigModal();
                     e.preventDefault();
                 }
-            }
-        });
+
+            // Teclas de Navegación (Flechas) en vista Calendario
+                if (currentView === 'calendar') {
+                    
+                    // Regresar a Hoy: ALT + NumpadEnter (Llama a la función correcta)
+                    if (e.code === 'NumpadEnter' && e.altKey) { 
+                        regresarHoy(); // Función encontrada en tu código HTML
+                        e.preventDefault();
+                    } 
+                    
+                    // Flechas Izquierda/Derecha (Cambio de Mes - No requiere Alt)
+                    else if (e.key === 'ArrowLeft') {
+                        prevMonth();
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowRight') {
+                        nextMonth();
+                        e.preventDefault();
+                    } 
+                    // Flechas Arriba/Abajo (Cambio de AÑO - REQUIERE ALT)
+                    else if (e.key === 'ArrowUp' && e.altKey) { 
+                        prevYear();
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowDown' && e.altKey) {
+                        nextYear();
+                        e.preventDefault();
+                    }
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
