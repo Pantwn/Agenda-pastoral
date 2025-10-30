@@ -868,7 +868,7 @@
 
                 <div style="display: flex; gap: 10px; margin-top: 30px;">
                     <button type="submit" class="btn-primary" style="flex: 1;"><i class="fas fa-save"></i> Guardar Configuración</button>
-                    <button type="button" class="btn-danger" onclick="formatDataConfirm()" style="flex: 1;"><i class="fas fa-eraser"></i> Formatear Todos los Datos</button>
+                    <button type="button" id="formatDataButton" class="btn-danger" onclick="formatDataConfirm()" style="flex: 1;"><i class="fas fa-eraser"></i> Formatear Todos los Datos</button>
                 </div>
             </form>
         </div>
@@ -2025,77 +2025,69 @@
 
         // ===================================
         // 10. FUNCIONALIDAD DE TECLAS
-        // (Mantenido del código anterior)
+        // (Bloque de manejo de eventos de teclado)
         // ===================================
 
-       document.addEventListener('keydown', (e) => {
-           // Cierre de Modales con ESC
-           if (e.key === 'Escape') {
-               document.querySelectorAll('.modal').forEach(modal => closeModal(modal.id));
-               return;
-           }
+        document.addEventListener('keydown', (e) => {
+            // Cierre de Modales con ESC
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => closeModal(modal.id));
+                return;
+            }
 
-           // ===========================================
-           // Teclas de Función (Teclado Numérico y Alt)
-           // ===========================================
-           
-           // Función Añadir: '+' o NumpadAdd
-           if (e.code === 'NumpadAdd' || e.key === '+') {
-               openActivityModal('create');
-               e.preventDefault();
-           } 
-           
-           // Función Menos: Alt + '-' o Alt + NumpadSubtract
-           else if ((e.code === 'NumpadSubtract' || e.key === '-') && e.altKey) {
-               changeView('list');
-               const searchInput = document.getElementById('search-input');
-               if (searchInput.value !== '') {
-                   searchInput.value = ''; // Borra el texto existente si lo hay
-               }
-               searchInput.focus(); // Coloca el cursor en el campo de búsqueda
-               e.preventDefault();
-           }
-           
-           // Función Configuración: '/' o NumpadDivide
-           else if (e.code === 'NumpadDivide' || e.key === '/') {
-               openConfigModal();
-               e.preventDefault();
-           }
+            // ===========================================
+            // Teclas de Función (Teclado Numérico y Alt)
+            // ===========================================
+            
+            // Función Añadir: '+' o NumpadAdd
+            if (e.code === 'NumpadAdd' || e.key === '+') {
+                openActivityModal('create');
+                e.preventDefault();
+            }
+            
+            // Función Formatear: ALT + Backspace (Inicia la doble confirmación)
+            else if (e.altKey && e.key === 'Backspace') {
+                document.getElementById('formatDataButton').click(); // Simula el clic al botón de Formateo
+                e.preventDefault();
+            }
 
-           // Teclas de Navegación (Flechas) en vista Calendario
-           if (currentView === 'calendar') {
-               // Flechas Izquierda/Derecha (Cambio de Mes - No requiere Alt)
-               if (e.key === 'ArrowLeft') {
-                   prevMonth();
-                   e.preventDefault();
-               } else if (e.key === 'ArrowRight') {
-                   nextMonth();
-                   e.preventDefault();
-               } 
-               // Flechas Arriba/Abajo (Cambio de AÑO - AHORA REQUIERE ALT)
-               else if (e.key === 'ArrowUp' && e.altKey) { 
-                   prevYear();
-                   e.preventDefault();
-               } else if (e.key === 'ArrowDown' && e.altKey) {
-                   nextYear();
-                   e.preventDefault();
-               }
-           }
-       });
-
-
-
-
-
-
-            document.getElementById('search-btn').addEventListener('click', function() {
-                changeView('list'); // Cambia la vista a "Agenda"
+            // Función Buscar: Alt + '-' o Alt + NumpadSubtract
+            else if ((e.code === 'NumpadSubtract' || e.key === '-') && e.altKey) {
+                changeView('list');
                 const searchInput = document.getElementById('search-input');
                 if (searchInput.value !== '') {
-                    searchInput.value = '';
+                    searchInput.value = ''; // Borra el texto existente si lo hay
                 }
-                searchInput.focus(); // Enfoca el campo de búsqueda
-            });
+                searchInput.focus(); // Coloca el cursor en el campo de búsqueda
+                e.preventDefault();
+            }
+            
+            // Función Configuración: '/' o NumpadDivide
+            else if (e.code === 'NumpadDivide' || e.key === '/') {
+                openConfigModal();
+                e.preventDefault();
+            }
+
+            // Teclas de Navegación (Flechas) en vista Calendario
+            if (currentView === 'calendar') {
+                // Flechas Izquierda/Derecha (Cambio de Mes - No requiere Alt)
+                if (e.key === 'ArrowLeft') {
+                    prevMonth();
+                    e.preventDefault();
+                } else if (e.key === 'ArrowRight') {
+                    nextMonth();
+                    e.preventDefault();
+                } 
+                // Flechas Arriba/Abajo (Cambio de AÑO - REQUIERE ALT)
+                else if (e.key === 'ArrowUp' && e.altKey) { 
+                    prevYear();
+                    e.preventDefault();
+                } else if (e.key === 'ArrowDown' && e.altKey) {
+                    nextYear();
+                    e.preventDefault();
+                }
+            }
+        });
 
 
 
