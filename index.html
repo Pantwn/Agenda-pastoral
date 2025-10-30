@@ -280,13 +280,13 @@
                 display: flex;
                 justify-content: flex-start;
                 flex-wrap: wrap;
-                margin-top: 2px;
+                margin-top: 5px;
             }
             .event-dot {
                 width: 12px;
                 height: 12px;
                 border-radius: 50%;
-                margin: 2px;
+                margin: 5px !important;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.3);
             }
         }
@@ -343,8 +343,54 @@
             white-space: nowrap;
         }
 
-        /* Colores de Departamentos base (Se sobreescriben por JS/LocalStorage) */
-        .dept-mn { background-color: black; color: white; font-weight: bold; }
+        .dept-mn { 
+            background-color: #000000; 
+            color: #FFFFFF; 
+            font-weight: bold; 
+            /* ¡Añade esta línea para que la sombra y el padding se vean correctamente! */
+            display: inline-block; 
+            
+            box-shadow: 0 4px 8px rgba(255, 0, 0, 0.7); /* Sombra roja más visible (alpha 0.7) */
+            padding: 10px; 
+            border-radius: 5px; /* Opcional: añade esquinas redondeadas para que la sombra se vea mejor */
+        }
+
+        .dept-UMN { 
+            background-color: #CD7F32; 
+            color: #FFFFFF; 
+            font-weight: bold; 
+            /* ¡Añade esta línea! */
+            display: inline-block; 
+            
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+            padding: 10px; 
+            border-radius: 5px;
+        }
+
+        .dept-DIA { 
+            background-color: #C0C0C0; 
+            color: #FFFFFF; 
+            font-weight: bold; 
+            /* ¡Añade esta línea! */
+            display: inline-block; 
+            
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+            padding: 10px; 
+            border-radius: 5px;
+        }
+
+        .dept-AG { 
+            background-color: #FFD700; 
+            color: #FFFFFF; 
+            font-weight: bold; 
+            /* ¡Añade esta línea! */
+            display: inline-block; 
+            
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+            padding: 10px; 
+            border-radius: 5px;
+        }
+        
         .dept-mj { background-color: #00008B; color: white; font-weight: bold; }
         .dept-mi { background-color: #FF69B4; color: white; font-weight: bold; }
         .dept-ms { background-color: yellow; color: black; font-weight: bold; }
@@ -355,7 +401,7 @@
         .dept-visitacion { background-color: #8A2BE2; color: white; font-weight: bold; }
         .dept-otro { background-color: var(--secondary-color); color: white; font-weight: bold; }
         .dept-mmujer { background-color: #7A288A; color: white; font-weight: bold; }
-        .dept-escuelaSab { background-color: #FFC080; color: black; font-weight: bold; }
+        .dept-escuelaSab { background-color: #E36B2C; color: black; font-weight: bold; }
         .dept-predicacionEs { background-color: #FF0033; color: white; font-weight: bold; }
         .dept-predicacionSem { background-color: #FFA07A; color: black; font-weight: bold; }
         .dept-juntaDir { background-color: #6495ED; color: white; font-weight: bold; }
@@ -364,27 +410,38 @@
         .dept-club; background-color: #228B22; color: white; font-weight: bold; }
         .dept-reunionLai { background-color: #C6F4D6; color: black; font-weight: bold; }
         .dept-servicioFun { background-color: #4B0082; color: white; font-weight: bold; }
-        .dept-santaCena { background-color: #C51077; color: white; font-weight: bold; }
-        .dept-UMN { background-color: #CD7F32; color: #000000; font-weight: bold; }
-        .dept-UMN .tag { animation: pulse 2s infinite; }
-
-        .dept-DIA { background-color: #C0C0C0; color: #000000; font-weight: bold; }
-        .dept-DIA .tag { animation: pulse 2s infinite; }
-
-        .dept-AG { background-color: #FFD700; color: #000000; font-weight: bold; }
-        .dept-AG .tag { animation: pulse 2s infinite; }
+        .dept-santaCena { background-color: #530000 ; color: white; font-weight: bold; }
+        
 
         /* Botón Flotante */
         .float-btn {
             position: fixed;
             bottom: 30px;
-            right: 30px;
-            width: 55px;
-            height: 55px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background-color: var(--success-color);
             color: white;
-            font-size: 2em;
+            font-size: 1em;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+            transition: transform 0.3s;
+        }
+
+        .float-btn-search {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1em;
             box-shadow: 0 6px 15px rgba(0,0,0,0.3);
             display: flex;
             justify-content: center;
@@ -580,7 +637,7 @@
        .event-icon {
            font-size: 12px;
            text-align: center;
-           margin: 2px;
+           margin: 5px;
        }
 
        .event-dot.informe-mensual-pastoral .event-icon {
@@ -636,28 +693,97 @@
 
 
 
-      .event-mini-dots {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 5px; /* Ajusta el valor según sea necesario */
+      .UMN .event-icon, .MN .event-icon, .DIA .event-icon, .AG .event-icon {
+          animation: spin 2s infinite linear;
+          transform-style: preserve-3d;
       }
 
-
-
-      .mn .event-icon, .UMN .event-icon, .DIA .event-icon, .AG .event-icon {
-          animation: rotate 2s infinite linear;
-      }
-
-      @keyframes rotate {
+      @keyframes spin {
           0% {
-              transform: rotate(0deg);
+              transform: rotate3d(1, 1, 1, 0deg);
           }
           100% {
-              transform: rotate(360deg);
+              transform: rotate3d(1, 1, 1, 360deg);
           }
       }
+
        
-       
+
+       .fas.fa-wine-glass-alt + .fas.fa-bread-slice {
+         margin-left: -5px; /* Ajusta el valor según sea necesario */
+       }
+
+
+
+
+     
+
+
+     
+      
+
+          .UMN .event-icon, .MN .event-icon, .DIA .event-icon, .AG .event-icon {
+              animation: giro-horizontal 6s infinite linear;
+              transform-style: preserve-3d;
+          }
+
+          @keyframes giro-horizontal {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+          }
+          .gira-derecho {
+              animation: giro-horizontal 2.05s linear infinite;
+              transform-style: preserve-3d;
+          }
+
+
+
+
+          .santa-cena-icon::after {
+            content: "\f7ec"; /* Código Unicode del icono de pan */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-left: 3px;aa
+          }
+
+
+
+          .botones-flotantes {
+              position: fixed;
+              top: 20px; /* Ajusta la posición según necesites */
+              right: 20px; /* Ajusta la posición según necesites */
+              display: flex;
+              flex-direction: column;
+              gap: 10px; /* Espacio entre botones */
+              z-index: 1000; /* Asegúrate de que estén por encima de otros elementos */
+          }
+
+          .botones-flotantes button {
+              padding: 5px;
+              border-radius: 50%;
+              width: 35px;
+              height: 35px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          }
+
+          .botones-flotantes button i {
+              font-size: 1.5em;
+          }
+
+
+
+          /* Estilo para el botón de búsqueda/filtro cuando está activo (naranja) */
+          .float-btn-search.filter-active {
+              background-color: var(--warning-color); /* Naranja/Amarillo de advertencia */
+              color: var(--dark-text); /* Texto oscuro para mejor contraste */
+              box-shadow: 0 6px 15px rgba(255, 193, 7, 0.5); /* Sombra resaltada */
+          }
+
+          
+
     </style>
 </head>
 <body>
@@ -674,10 +800,16 @@
             </div>
         </header>
 
-        <div class="view-selector">
+        <div class="botones-flotantes">
             <button class="btn-primary icon-only-btn view-button" id="btn-calendar-view" onclick="changeView('calendar')" title="Calendario"><i class="fas fa-calendar-alt"></i><span>Calendario</span></button>
             <button class="btn-secondary icon-only-btn view-button" id="btn-list-view" onclick="changeView('list')" title="Lista de Actividades (Presiona -)"><i class="fas fa-list"></i><span>Lista</span></button>
             <button id="regresar-hoy" class="btn-secondary icon-only-btn" onclick="regresarHoy()" title="" style="display: none;"><i class="fas fa-calendar-day"></i> </button>
+            <button class="float-btn" id="add-activity-btn" onclick="openActivityModal('create')" title="Agregar Actividad (Presiona '+')">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="float-btn-search" id="search-btn" title="Buscar">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
 
         <div class="main-grid">
@@ -702,9 +834,10 @@
         </div>
     </div>
 
-    <button class="float-btn" id="add-activity-btn" onclick="openActivityModal('create')" title="Agregar Actividad (Presiona '+')">
-        <i class="fas fa-plus"></i>
-    </button>
+   
+
+
+
 
     <div id="config-modal" class="modal">
         <div class="modal-content">
@@ -876,6 +1009,50 @@
         let currentView = 'calendar';
 
 
+        // Variable global para rastrear si el filtro de "Hoy" está activo
+        let isTodayFilterActive = false; 
+
+        // Función auxiliar para obtener las actividades del día actual
+        const getTodayActivities = (allActivities) => {
+            // Obtiene la fecha actual en formato 'YYYY-MM-DD'
+            const today = new Date().toISOString().substring(0, 10); 
+            
+            return allActivities.filter(activity => {
+                // Compara solo la fecha de inicio de la actividad
+                const activityDate = new Date(activity.start).toISOString().substring(0, 10);
+                return activityDate === today;
+            });
+        };
+
+       const toggleTodayFilter = () => {
+           // 1. Alterna el estado del filtro
+           isTodayFilterActive = !isTodayFilterActive; 
+           const button = document.getElementById('search-btn');
+           const searchInput = document.getElementById('search-input');
+
+           // 2. Aplica o quita la clase de color naranja
+           if (isTodayFilterActive) {
+               button.classList.add('filter-active');
+               // Opcional: Si el filtro de hoy está activo, borramos el texto de búsqueda 
+               // para que no interfiera y enfocamos la lista de hoy.
+               searchInput.value = ''; 
+           } else {
+               button.classList.remove('filter-active');
+           }
+           
+           // 3. Asegura que estamos en la vista de lista para ver los resultados
+           changeView('list'); 
+
+           // 4. Renderiza la lista para aplicar el filtro (o quitarlo)
+           renderActivityList(); 
+       };
+
+
+
+
+
+
+
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
         let activities = [];
@@ -898,31 +1075,42 @@
 
         // Departamentos base
         const defaultDepartments = {
-            mn: { name: "Misión Noroccidental", fondo: "#000000", letra: "#ffffff", icon: "fas fa-building" },
-            UMN: { name: "Unión Mexicana del Norte", fondo: "#CD7F32", letra: "#000000", icon: "fas fa-handshake" },
-            DIA: { name: "División Interamericana", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-globe-americas" },
-            AG: { name: "Asociación General", fondo: "#FFD700", letra: "#000000", icon: "fas fa-globe" },
-            mj: { name: "Ministerio Juvenil", fondo: "#00008B", letra: "#ffffff", icon: "fas fa-users" },
-            mi: { name: "Ministerio Infantil", fondo: "#FF69B4", letra: "#ffffff", icon: "fas fa-child" },
-            ms: { name: "Ministerio de Salud", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-stethoscope" },
-            mp: { name: "Ministerios Personales", fondo: "#008000", letra: "#ffffff", icon: "fas fa-hand-holding-heart" },
-            mm: { name: "Ministerio de Mayordomía", fondo: "#654321", letra: "#ffffff", icon: "fas fa-piggy-bank" },
-            mvf: { name: "Ministerio de Vida Familiar", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-home" },
-            visitacion: { name: "Visitación Pastoral", fondo: "#8A2BE2", letra: "#ffffff", icon: "fas fa-house-chimney-user" },
-            predicacion: { name: "Predicación", fondo: "#FF4500", letra: "#ffffff", icon: "fas fa-church" },
-            otro: { name: "Otro", fondo: "#6c757d", letra: "#ffffff", icon: "fas fa-circle-question" },
-            mmujer: { name: "Ministerio de la Mujer", fondo: "#7A288A", letra: "#ffffff", icon: "fas fa-female" },
-                escuelaSab: { name: "Escuela Sabática", fondo: "#FFC080", letra: "#000000", icon: "fas fa-book-open" },
-                predicacionEs: { name: "Predicación Escuela Sabática", fondo: "#FF0033", letra: "#ffffff", icon: "fas fa-bible" },
-                predicacionSem: { name: "Predicación Semanal", fondo: "#fe8931", letra: "#000000", icon: "fas fa-calendar-alt" },
-                juntaDir: { name: "Junta Directiva", fondo: "#6495ED", letra: "#ffffff", icon: "fas fa-users-cog" },
-                juntaAdm: { name: "Junta Administrativa", fondo: "#000000", letra: "#ffffff", icon: "fas fa-lock" },
-                juntaAnc: { name: "Junta de Ancianos", fondo: "#e4717a", letra: "#ffffff", icon: "fas fa-user-tie" },
-                clubLai: { name: "Club de Laicos", fondo: "#99FF00", letra: "#ffffff", icon: "fas fa-cross" },
-                reunionLai: { name: "Reunión de Laicos", fondo: "#99FF00", letra: "#000000", icon: "fas fa-users" },
-                servicioFun: { name: "Servicio Funebre", fondo: "#bc4ed8", letra: "#ffffff", icon: "fas fa-cross" },
-                santaCena: { name: "Santa Cena", fondo: "#C51077", letra: "#ffffff", icon: "fas fa-wine-glass-alt" },
-                informeMensualPastoral: { name: "Informe Pastoral", fondo: "#87CEEB", letra: "#000000", icon: "fas fa-file-alt blink" },
+                    mn: { name: "Misión Noroccidental", fondo: "#000000", letra: "#ffffff", icon: "fas fa-building gira-derecho" },
+                    UMN: { name: "Unión Mexicana del Norte", fondo: "#CD7F32", letra: "#ffffff", icon: "fas fa-handshake gira-derecho" },
+                    DIA: { name: "División Interamericana", fondo: "#C0C0C0", letra: "#ffffff", icon: "fas fa-globe-americas gira-derecho" },
+                    AG: { name: "Asociación General", fondo: "#FFD700", letra: "#ffffff", icon: "fas fa-globe gira-derecho" },
+                    
+
+
+                    predicacionEs: { name: "Predicación Escuela Sabática", fondo: "#FF0033", letra: "#ffffff", icon: "fas fa-bible" },
+                    predicacionSem: { name: "Predicación Semanal", fondo: "#fe8931", letra: "#000000", icon: "fas fa-calendar-alt" },
+                    predicacion: { name: "Predicación", fondo: "#FF4500", letra: "#ffffff", icon: "fas fa-church" },
+                    otro: { name: "Otro", fondo: "#6c757d", letra: "#ffffff", icon: "fas fa-circle-question" },
+                    visitacion: { name: "Visitación Pastoral", fondo: "#8A2BE2", letra: "#ffffff", icon: "fas fa-house-chimney-user" },
+
+
+
+                    mj: { name: "Dp. Ministerio Juvenil", fondo: "#00008B", letra: "#ffffff", icon: "fas fa-users" },
+                    mi: { name: "Dp. Ministerio Infantil", fondo: "#FF69B4", letra: "#ffffff", icon: "fas fa-child" },
+                    ms: { name: "Dp. Ministerio de Salud", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-stethoscope" },
+                    mp: { name: "Dp. Ministerios Personales", fondo: "#008000", letra: "#ffffff", icon: "fas fa-hand-holding-heart" },
+                    mm: { name: "Dp. Ministerio de Mayordomía", fondo: "#654321", letra: "#ffffff", icon: "fas fa-piggy-bank" },
+                    mvf: { name: "Dp. Ministerio de Vida Familiar", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-home" },
+                    mmujer: { name: "Dp. Ministerio de la Mujer", fondo: "#7A288A", letra: "#ffffff", icon: "fas fa-female" },
+                    escuelaSab: { name: "Dp. Escuela Sabática", fondo: "#E36B2C", letra: "#000000", icon: "fas fa-book-open" },
+                    
+                    juntaDir: { name: "Junta Directiva", fondo: "#6495ED", letra: "#ffffff", icon: "fas fa-users-cog" },
+                    juntaAdm: { name: "Junta Administrativa", fondo: "#000000", letra: "#ffffff", icon: "fas fa-lock" },
+                    juntaAnc: { name: "Junta de Ancianos", fondo: "#e4717a", letra: "#ffffff", icon: "fas fa-user-tie" },
+                    clubLai: { name: "Club de Laicos", fondo: "#99FF00", letra: "#ffffff", icon: "fas fa-cross" },
+                    reunionLai: { name: "Reunión de Laicos", fondo: "#99FF00", letra: "#000000", icon: "fas fa-users" },
+                    servicioFun: { name: "Servicio Funebre", fondo: "#bc4ed8", letra: "#ffffff", icon: "fas fa-cross" },
+                    santaCena: { name: "Santa Cena", fondo: "#530000 ", letra: "#ffffff", icon: "fas fa-wine-glass-alt santa-cena-icon" },
+
+
+
+
+                    informeMensualPastoral: { name: "Informe Pastoral", fondo: "#87CEEB", letra: "#000000", icon: "fas fa-file-alt blink" },
                     informeMensualTesoreria: { name: "Informe de Tesorería", fondo: "#4682B4", letra: "#ffffff", icon: "fas fa-money-bill-wave blink" },
                     informeMensualSecretaria: { name: "Informe de Secretaría", fondo: "#171a4a", letra: "#ffffff", icon: "fas fa-file-signature blink" },
                     informeMensualPlanEstrategico: { name: "Informe del Plan Estratégico", fondo: "#00BFFF", letra: "#000000", icon: "fas fa-chart-line blink" },
@@ -930,13 +1118,13 @@
                     informeMensualTodoAnciano: { name: "Informe de Todo Anciano Involucrado", fondo: "#C9E4CA", letra: "#000000", icon: "fas fa-praying-hands blink" },
                     informeMensualEjesTransversales: { name: "Informe de los Ejes Transversales", fondo: "#ADD8E6", letra: "#000000", icon: "fas fa-project-diagram blink" },
                     informeMensualDiarioGratitud: { name: "Informe del Diario de Gratitud", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-gift blink" },
-                    informeTrimestralMinisterioInfantil: { name: "Ministerio Infantil y Adolescente", fondo: "#FF69B4", letra: "#000000", icon: "fas fa-child blink" },
-                    informeTrimestralMinisterioMujer: { name: "Ministerio de la Mujer", fondo: "#7A288A", letra: "#000000", icon: "fas fa-venus blink" },
-                    informeTrimestralMinisteriosPersonales: { name: "Ministerios Personales", fondo: "#008000", letra: "#000000", icon: "fas fa-hand-holding-heart blink" },
-                    informeTrimestralEscuelaSabatica: { name: "Escuela Sabática", fondo: "#ff0000", letra: "#000000", icon: "fas fa-book-open blink" },
-                    
+                    informeTrimestralMinisterioInfantil: { name: "Informe de Ministerio Infantil y Adolescente", fondo: "#FF69B4", letra: "#000000", icon: "fas fa-child blink" },
+                    informeTrimestralMinisterioMujer: { name: "Informe de Ministerio de la Mujer", fondo: "#7A288A", letra: "#000000", icon: "fas fa-venus blink" },
+                    informeTrimestralMinisteriosPersonales: { name: "Informe de Ministerios Personales", fondo: "#008000", letra: "#000000", icon: "fas fa-hand-holding-heart blink" },
+                    informeTrimestralEscuelaSabatica: { name: "Informe de Escuela Sabática", fondo: "#ff0000", letra: "#000000", icon: "fas fa-book-open blink" },
+                            
 
-            };
+                    };
         
 
         let config = {
@@ -1249,7 +1437,7 @@
             renderCalendar();
         };
 
-        const departmentsToBlink = ['mj', 'mi', 'ms', 'mp', 'mm', 'mvf', 'mmujer', 'escuelaSab'];
+        const departmentsToBlink = ['mj', 'mi', 'ms', 'mp', 'mm', 'mvf', 'mmujer', 'escuelaSab' ];
 
         const departmentsToRotate = ['mn', 'UMN', 'DIA', 'AG'];
 
@@ -1840,43 +2028,76 @@
         // (Mantenido del código anterior)
         // ===================================
 
-        document.addEventListener('keydown', (e) => {
-            // Cierre de Modales con ESC
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(modal => closeModal(modal.id));
-                return;
-            }
+       document.addEventListener('keydown', (e) => {
+           // Cierre de Modales con ESC
+           if (e.key === 'Escape') {
+               document.querySelectorAll('.modal').forEach(modal => closeModal(modal.id));
+               return;
+           }
 
-            // Teclas de Función (Teclado Numérico)
-            if (e.code === 'NumpadAdd' || e.key === '+') {
-                openActivityModal('create');
-                e.preventDefault();
-            } else if (e.code === 'NumpadSubtract' || e.key === '-') {
-                changeView('list');
-                document.getElementById('search-input').focus();
-                e.preventDefault();
-            } else if (e.code === 'NumpadDivide' || e.key === '/') {
-                openConfigModal();
-                e.preventDefault();
-            }
+           // ===========================================
+           // Teclas de Función (Teclado Numérico y Alt)
+           // ===========================================
+           
+           // Función Añadir: '+' o NumpadAdd
+           if (e.code === 'NumpadAdd' || e.key === '+') {
+               openActivityModal('create');
+               e.preventDefault();
+           } 
+           
+           // Función Menos: Alt + '-' o Alt + NumpadSubtract
+           else if ((e.code === 'NumpadSubtract' || e.key === '-') && e.altKey) {
+               changeView('list');
+               const searchInput = document.getElementById('search-input');
+               if (searchInput.value !== '') {
+                   searchInput.value = ''; // Borra el texto existente si lo hay
+               }
+               searchInput.focus(); // Coloca el cursor en el campo de búsqueda
+               e.preventDefault();
+           }
+           
+           // Función Configuración: '/' o NumpadDivide
+           else if (e.code === 'NumpadDivide' || e.key === '/') {
+               openConfigModal();
+               e.preventDefault();
+           }
 
-            // Teclas de Navegación (Flechas) en vista Calendario
-            if (currentView === 'calendar') {
-                if (e.key === 'ArrowLeft') {
-                    prevMonth();
-                    e.preventDefault();
-                } else if (e.key === 'ArrowRight') {
-                    nextMonth();
-                    e.preventDefault();
-                } else if (e.key === 'ArrowUp') {
-                    prevYear();
-                    e.preventDefault();
-                } else if (e.key === 'ArrowDown') {
-                    nextYear();
-                    e.preventDefault();
+           // Teclas de Navegación (Flechas) en vista Calendario
+           if (currentView === 'calendar') {
+               // Flechas Izquierda/Derecha (Cambio de Mes - No requiere Alt)
+               if (e.key === 'ArrowLeft') {
+                   prevMonth();
+                   e.preventDefault();
+               } else if (e.key === 'ArrowRight') {
+                   nextMonth();
+                   e.preventDefault();
+               } 
+               // Flechas Arriba/Abajo (Cambio de AÑO - AHORA REQUIERE ALT)
+               else if (e.key === 'ArrowUp' && e.altKey) { 
+                   prevYear();
+                   e.preventDefault();
+               } else if (e.key === 'ArrowDown' && e.altKey) {
+                   nextYear();
+                   e.preventDefault();
+               }
+           }
+       });
+
+
+
+
+
+
+            document.getElementById('search-btn').addEventListener('click', function() {
+                changeView('list'); // Cambia la vista a "Agenda"
+                const searchInput = document.getElementById('search-input');
+                if (searchInput.value !== '') {
+                    searchInput.value = '';
                 }
-            }
-        });
+                searchInput.focus(); // Enfoca el campo de búsqueda
+            });
+
+
 
 
         // ===================================
@@ -2261,6 +2482,9 @@
                 renderActivityList(); // Agrega esta línea para actualizar la lista de actividades
             });
         };
+
+        // Dentro de tu función init() (o al final del script):
+        document.getElementById('search-btn').addEventListener('click', () => toggleTodayFilter());
 
         init();
 
