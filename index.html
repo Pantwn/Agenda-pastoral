@@ -642,6 +642,20 @@
           gap: 5px; /* Ajusta el valor según sea necesario */
       }
 
+
+
+      .mn .event-icon, .UMN .event-icon, .DIA .event-icon, .AG .event-icon {
+          animation: rotate 2s infinite linear;
+      }
+
+      @keyframes rotate {
+          0% {
+              transform: rotate(0deg);
+          }
+          100% {
+              transform: rotate(360deg);
+          }
+      }
        
        
     </style>
@@ -885,6 +899,9 @@
         // Departamentos base
         const defaultDepartments = {
             mn: { name: "Misión Noroccidental", fondo: "#000000", letra: "#ffffff", icon: "fas fa-building" },
+            UMN: { name: "Unión Mexicana del Norte", fondo: "#CD7F32", letra: "#000000", icon: "fas fa-handshake" },
+            DIA: { name: "División Interamericana", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-globe-americas" },
+            AG: { name: "Asociación General", fondo: "#FFD700", letra: "#000000", icon: "fas fa-globe" },
             mj: { name: "Ministerio Juvenil", fondo: "#00008B", letra: "#ffffff", icon: "fas fa-users" },
             mi: { name: "Ministerio Infantil", fondo: "#FF69B4", letra: "#ffffff", icon: "fas fa-child" },
             ms: { name: "Ministerio de Salud", fondo: "#FFFF00", letra: "#000000", icon: "fas fa-stethoscope" },
@@ -917,9 +934,7 @@
                     informeTrimestralMinisterioMujer: { name: "Ministerio de la Mujer", fondo: "#7A288A", letra: "#000000", icon: "fas fa-venus blink" },
                     informeTrimestralMinisteriosPersonales: { name: "Ministerios Personales", fondo: "#008000", letra: "#000000", icon: "fas fa-hand-holding-heart blink" },
                     informeTrimestralEscuelaSabatica: { name: "Escuela Sabática", fondo: "#ff0000", letra: "#000000", icon: "fas fa-book-open blink" },
-                    UMN: { name: "Unión Mexicana del Norte", fondo: "#CD7F32", letra: "#000000", icon: "fas fa-handshake blink" },
-                        DIA: { name: "División Interamericana", fondo: "#C0C0C0", letra: "#000000", icon: "fas fa-globe-americas blink" },
-                        AG: { name: "Asociación General", fondo: "#FFD700", letra: "#000000", icon: "fas fa-globe blink" },
+                    
 
             };
         
@@ -1234,7 +1249,16 @@
             renderCalendar();
         };
 
-        const departmentsToBlink = ['mn', 'mj', 'mi', 'ms', 'mp', 'mm', 'mvf', 'mmujer', 'escuelaSab', 'UMN', 'DIA', 'AG'];
+        const departmentsToBlink = ['mj', 'mi', 'ms', 'mp', 'mm', 'mvf', 'mmujer', 'escuelaSab'];
+
+        const departmentsToRotate = ['mn', 'UMN', 'DIA', 'AG'];
+
+        departmentsToRotate.forEach(dept => {
+            const icon = document.querySelector(`.${dept} .event-icon`);
+            if (icon) {
+                icon.classList.add('rotate');
+            }
+        });
 
         const placeEventsOnCalendar = (daysInMonth) => {
             const startOfMonth = new Date(currentYear, currentMonth, 1);
