@@ -2770,23 +2770,38 @@
 
 
         // ===================================
-        // 17. PROCESAR AGENDA IMPORTADA (FUSIÓN/SOBREESCRITURA)
+        // 17. PROCESAR AGENDA IMPORTADA (FUSIÓN/SOBREESCRITURA) - CORREGIDO
         // ===================================
         const processImportedActivities = (newActivitiesData) => {
-            if (!Array.isArray(newActivitiesData)) {
-                alert('❌ Error: El archivo cargado no parece ser una lista de actividades válida (debe ser un array JSON).');
-                return;
+            let activitiesToImport = newActivitiesData; // Variable temporal para trabajar con los datos
+
+            // 1. VERIFICACIÓN DE ESTRUCTURA CLAVE:
+            // Si el dato no es un array, intentamos extraerlo de un objeto.
+            if (!Array.isArray(activitiesToImport)) {
+                if (typeof activitiesToImport === 'object' && activitiesToImport !== null) {
+                    
+                    // Intentamos buscar las propiedades comunes donde podría estar el array.
+                    // Esto cubre casos donde el JSON es: { "activities": [...] } o { "agenda": [...] }
+                    activitiesToImport = activitiesToImport.activities || activitiesToImport.agenda;
+                }
+
+                // Si después de la extracción, todavía no es un array, mostramos el error.
+                if (!Array.isArray(activitiesToImport)) {
+                    alert('❌ Error: El archivo cargado no parece ser una lista de actividades válida. ' + 
+                          'Verifica que el JSON comience con "[...]" o que contenga las actividades en una propiedad principal como "activities" o "agenda".');
+                    return;
+                }
             }
             
-            // 1. Convertir las cadenas de fecha (ISO strings) a objetos Date
-            const newActivities = newActivitiesData.map(activity => ({
+            // 2. Convertir las cadenas de fecha (ISO strings) a objetos Date
+            const newActivities = activitiesToImport.map(activity => ({
                 ...activity,
                 // Convertir start y end de string a Date
                 start: new Date(activity.start),
                 end: activity.end ? new Date(activity.end) : null
             }));
 
-            // 2. Pedir al usuario la acción (Overwrite o Merge)
+            // 3. Pedir al usuario la acción (Overwrite o Merge)
             const mode = prompt(
                 '¡Agenda externa lista para cargar!\n\n' +
                 'Escribe "SOBREESCRIBIR" para reemplazar la agenda actual.\n' +
@@ -2802,6 +2817,7 @@
 
             let finalActivities = [];
             const importCount = newActivities.length;
+            const existingCount = activities.length;
 
             if (mode.toUpperCase() === 'SOBREESCRIBIR') {
                 finalActivities = newActivities;
@@ -2809,13 +2825,13 @@
             } else if (mode.toUpperCase() === 'AGREGAR') {
                 // Conserva las actividades existentes y añade las nuevas
                 finalActivities = activities.concat(newActivities);
-                alert(`✅ Agenda agregada con éxito. Se añadieron ${importCount} actividades a las ${activities.length} existentes.`);
+                alert(`✅ Agenda agregada con éxito. Se añadieron ${importCount} actividades a las ${existingCount} existentes.`);
             } else {
                 alert('Opción no reconocida. La carga de la agenda ha sido cancelada.');
                 return;
             }
 
-            // 3. Actualizar el array global, guardar y refrescar la vista
+            // 4. Actualizar el array global, guardar y refrescar la vista
             activities = finalActivities;
             saveActivities(); 
             
@@ -2823,7 +2839,6 @@
             renderActivityList(); 
             renderCalendar(); 
         };
-
 
         init();
 
